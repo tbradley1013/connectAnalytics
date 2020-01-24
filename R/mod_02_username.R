@@ -17,7 +17,7 @@ mod_02_username_ui <- function(id){
   ns <- NS(id)
   tagList(
     actionButton(
-      inputId = ns("username"),
+      inputId = ns("change_username"),
       label = "Change User",
       class = "btn-success",
       style = "position:relative;float:right;margin: 0 5px;"
@@ -60,12 +60,24 @@ mod_02_username_server <- function(input, output, session, r){
     }
   })
   
-  observeEvent(input$username, {
+  observeEvent(input$change_username, {
     showModal(dialog())
   })
   
-  observeEvent(input$submit, {
+  observe({
+    req(!is.null(input$username))
     
+    if (input$username == ""){
+      shinyjs::disable("submit")
+    } else {
+      shinyjs::enable("submit")
+    }
+  })
+  
+  observeEvent(input$submit, {
+    r$username <- input$username
+    
+    removeModal()
   })
 }
     
