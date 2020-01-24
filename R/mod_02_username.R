@@ -16,7 +16,12 @@
 mod_02_username_ui <- function(id){
   ns <- NS(id)
   tagList(
-  
+    actionButton(
+      inputId = ns("username"),
+      label = "Change User",
+      class = "btn-success",
+      style = "position:relative;float:right;margin: 0 5px;"
+    )
   )
 }
     
@@ -26,8 +31,42 @@ mod_02_username_ui <- function(id){
 #' @export
 #' @keywords internal
     
-mod_02_username_server <- function(input, output, session){
+mod_02_username_server <- function(input, output, session, r){
   ns <- session$ns
+  
+  dialog <- reactive({
+    dialog <- modalDialog(
+      textInput(
+        inputId = ns("username"),
+        label = "Username"
+      ),
+      title = "Change User",
+      footer = tagList(
+        modalButton("Cancel"),
+        actionButton(
+          inputId = ns("submit"),
+          label = "Change!",
+          class = "btn-primary"
+        )
+      )
+    )
+  })
+  
+  observe({
+    req(r$client)
+    
+    if (is.null(r$username)){
+      showModal(dialog())
+    }
+  })
+  
+  observeEvent(input$username, {
+    showModal(dialog())
+  })
+  
+  observeEvent(input$submit, {
+    
+  })
 }
     
 ## To be copied in the UI
