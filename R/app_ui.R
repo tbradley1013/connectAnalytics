@@ -3,13 +3,14 @@ app_ui <- function() {
   tagList(
     # Leave this function for adding external resources
     shinyjs::useShinyjs(),
-    shinythemes::shinytheme("darkly"),
     golem_add_external_resources(),
     # List the first level UI elements here 
     navbarPageWithInputs(
       "connectAnalytics",
+      theme = shinythemes::shinytheme("flatly"),
       inputs = tagList(
-        mod_01_server_connect_ui("01_server_connect_ui_1")
+        mod_01_server_connect_ui("01_server_connect_ui_1"),
+        mod_02_username_ui("02_username_ui_1")
       )
     )
   )
