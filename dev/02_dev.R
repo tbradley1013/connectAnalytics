@@ -7,8 +7,8 @@
 
 ## 2.1 Add modules
 ## 
-golem::add_module( name = "my_first_module" ) # Name of the module
-golem::add_module( name = "my_other_module" ) # Name of the module
+golem::add_module(name = "01_server_connect") # Name of the module
+golem::add_module(name = "my_other_module") # Name of the module
 
 ## 2.2 Add dependencies
 
@@ -16,7 +16,7 @@ usethis::use_package( "thinkr" ) # To call each time you need a new package
 
 ## 2.3 Add tests
 
-usethis::use_test( "app" )
+usethis::use_test("app")
 
 ## 2.4 Add a browser button
 
