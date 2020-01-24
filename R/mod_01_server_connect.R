@@ -59,10 +59,12 @@ mod_01_server_connect_server <- function(input, output, session, r){
       title = "Enter Connection Info",
       footer = tagList(
         modalButton("Cancel"),
-        actionButton(
-          ns("connect"),
-          "Connect!",
-          class = "btn-primary"
+        withBusyIndicatorUI(
+          actionButton(
+            ns("connect"),
+            "Connect!",
+            class = "btn-primary"
+          )
         )
       )
     )
@@ -98,15 +100,15 @@ mod_01_server_connect_server <- function(input, output, session, r){
   
   # try to connect to the server with the input information
   observeEvent(input$connect, {
-    r$client <- connect_safe(host = input$connect_server, api_key = input$api_key)
-    removeModal()
-  })
-  
-  # reshow the modal if the connection fails
-  observe({
-    req(!is.null(r$client))
+    withBusyIndicatorServer(ns("connect"), {
+      r$client <- connect_safe(host = input$connect_server, api_key = input$api_key)
+    })
     
-    if (is.na(r$client)){
+    if (!is.na(r$client)){
+      r$connect_server <- input$connect_server
+      r$api_key <- input$api_key
+      removeModal()
+    } else {
       showModal(dialog())
       shinyjs::show("login-failed")
     }
