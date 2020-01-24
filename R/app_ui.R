@@ -19,13 +19,20 @@ app_ui <- function() {
 #' @import shiny
 golem_add_external_resources <- function(){
   
+  # uncomment once package is built
   # addResourcePath(
   #   'www', system.file('app/www', package = 'connectAnalytics')
+  # )
+  
+  # # comment out once deployed
+  # addResourcePath(
+  #   'www', 'inst/app/www'
   # )
  
   tags$head(
     golem::activate_js(),
-    golem::favicon()
+    golem::favicon(),
+    shiny::includeScript("inst/app/www/button_click.js")
     # Add here all the external resources
     # If you have a custom.css in the inst/app/www
     # Or for example, you can add shinyalert::useShinyalert() here

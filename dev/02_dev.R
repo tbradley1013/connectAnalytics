@@ -9,6 +9,7 @@
 ## 
 golem::add_module(name = "01_server_connect") # Name of the module
 golem::add_module(name = "02_username") # Name of the module
+golem::add_module(name = "03_userinfo")
 
 ## 2.2 Add dependencies
 
@@ -28,9 +29,9 @@ golem::browser_button()
 
 ## 2.5 Add external files
 
-golem::add_js_file( "script" )
-golem::add_js_handler( "handlers" )
-golem::add_css_file( "custom" )
+golem::add_js_file("button_click")
+# golem::add_js_handler( "handlers" )
+golem::add_css_file("custom")
 
 # 3. Documentation
 
