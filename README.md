@@ -9,16 +9,11 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-The goal of connectAnalytics is to …
+The goal of connectAnalytics is to provide an out of the box shiny app
+that will allow for RStudio Connect users to see analytics information
+about their deployed applications and documents.
 
 ## Installation
-
-You can install the released version of connectAnalytics from
-[CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("connectAnalytics")
-```
 
 And the development version from [GitHub](https://github.com/) with:
 
