@@ -20,7 +20,8 @@ mod_01_server_connect_ui <- function(id){
   tagList(
     actionButton(
       inputId = ns("change_connection"),
-      label = "Change Connection"
+      label = "Change Connection",
+      style = "position:relative;float:right;"
     )
   )
 }
@@ -33,37 +34,43 @@ mod_01_server_connect_ui <- function(id){
 mod_01_server_connect_server <- function(input, output, session, r){
   ns <- session$ns
   
-  # define the modal dialog
-  dialog <- modalDialog(
-    # shinyjs::hidden(
-    #   div(
-    #     id = ns("login-failed"),
-    #     helpText(
-    #       "The connection to the specified RStudio Connect server failed",
-    #       style = "color:red;"
-    #     )
-    #   )
-    # ),
-    textInput(
-      inputId = ns("connect_server"),
-      label = "RStudio Connect Server",
-      value = (r$connect_server %||% "")
-    ),
-    passwordInput(
-      inputId = ns("api_key"),
-      label = "RStudio Connect API Key",
-      value = (r$connect_server %||% "")
-    ),
-    title = "Enter Connection Info",
-    footer = tagList(
-      modalButton("Cancel"),
-      actionButton(
-        ns("connect"),
-        "Connect!",
-        class = "btn-primary"
+  dialog <- reactive({
+    # define the modal dialog
+    dialog <- modalDialog(
+      shinyjs::hidden(
+        div(
+          id = ns("login-failed"),
+          helpText(
+            "The connection to the specified RStudio Connect server failed",
+            style = "color:red;"
+          )
+        )
+      ),
+      textInput(
+        inputId = ns("connect_server"),
+        label = "RStudio Connect Server",
+        value = (r$connect_server %||% "")
+      ),
+      passwordInput(
+        inputId = ns("api_key"),
+        label = "RStudio Connect API Key",
+        value = (r$connect_server %||% "")
+      ),
+      title = "Enter Connection Info",
+      footer = tagList(
+        modalButton("Cancel"),
+        actionButton(
+          ns("connect"),
+          "Connect!",
+          class = "btn-primary"
+        )
       )
     )
-  )
+    
+    return(dialog)
+  })
+  
+  
   
   # a safe conneciton function
   connect_safe <- purrr::possibly(connectapi::connect, otherwise = NA)
@@ -72,7 +79,7 @@ mod_01_server_connect_server <- function(input, output, session, r){
   # then show the modal popup
   observe({
     if (is.null(r$connect_server) | is.null(r$api_key)){
-      showModal(dialog)
+      showModal(dialog())
     } else {
       r$client <- connect_safe(host = r$connect_server, api_key = r$api_key)
     }
@@ -100,14 +107,14 @@ mod_01_server_connect_server <- function(input, output, session, r){
     req(!is.null(r$client))
     
     if (is.na(r$client)){
-      showModal(dialog)
+      showModal(dialog())
       shinyjs::show("login-failed")
     }
   })
   
   # show dialog if the user choses to change connection
   observeEvent(input$change_connection, {
-    showModal(dialog)
+    showModal(dialog())
   })
 }
     
