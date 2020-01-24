@@ -14,11 +14,12 @@ Imports:
     DT,
     glue,
     htmltools,
-    connectapi (>= 0.1.0.9003)
+    connectapi (>= 0.1.0.9003),
+    purrr
 RoxygenNote: 6.1.0
 URL: https://github.com/tbradley1013/connectAnalytics
 BugReports: https://github.com/tbradley1013/connectAnalytics/issues
 Suggests: 
     testthat
-Remotes:  
+Remotes: 
     rstudio/connectapi
