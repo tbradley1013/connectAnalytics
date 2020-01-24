@@ -38,7 +38,8 @@ mod_02_username_server <- function(input, output, session, r){
     dialog <- modalDialog(
       textInput(
         inputId = ns("username"),
-        label = "Username"
+        label = "Username",
+        value = (r$username %||% "")
       ),
       title = "Change User",
       footer = tagList(
