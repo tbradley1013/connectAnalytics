@@ -12,7 +12,8 @@ golem::add_module(name = "my_other_module") # Name of the module
 
 ## 2.2 Add dependencies
 
-usethis::use_package( "thinkr" ) # To call each time you need a new package
+usethis::use_dev_package("connectapi")
+# usethis::use_package("thinkr") # To call each time you need a new package
 
 ## 2.3 Add tests
 
