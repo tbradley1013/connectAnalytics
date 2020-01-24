@@ -2,10 +2,14 @@
 app_ui <- function() {
   tagList(
     # Leave this function for adding external resources
+    shinyjs::useShinyjs(),
     golem_add_external_resources(),
     # List the first level UI elements here 
-    fluidPage(
-      h1("connectAnalytics")
+    navbarPageWithInputs(
+      "connectAnalytics",
+      inputs = tagList(
+        mod_01_server_connect_ui("01_server_connect_ui_1")
+      )
     )
   )
 }
@@ -13,9 +17,9 @@ app_ui <- function() {
 #' @import shiny
 golem_add_external_resources <- function(){
   
-  addResourcePath(
-    'www', system.file('app/www', package = 'connectAnalytics')
-  )
+  # addResourcePath(
+  #   'www', system.file('app/www', package = 'connectAnalytics')
+  # )
  
   tags$head(
     golem::activate_js(),

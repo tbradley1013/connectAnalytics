@@ -7,4 +7,5 @@ app_server <- function(input, output,session) {
     api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY")
   )
   # List the first level callModules here
+  callModule(mod_01_server_connect_server, "01_server_connect_ui_1", session = session, r = r)
 }
