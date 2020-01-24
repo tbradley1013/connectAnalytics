@@ -198,3 +198,47 @@ navbarPageWithInputs <- function(..., inputs) {
     navbar[[3]][[1]]$children[[1]], form)
   navbar
 }
+
+
+# Busy indicator for buttons
+withBusyIndicatorCSS <- "
+.btn-loading-container {
+margin-left: 10px;
+font-size: 1.2em;
+}
+.btn-done-indicator {
+color: green;
+}
+.btn-err {
+margin-top: 10px;
+color: red;
+}
+"
+
+withBusyIndicatorUI <- function(button) {
+  id <- button[['attribs']][['id']]
+  div(
+    shinyjs::useShinyjs(),
+    singleton(tags$head(
+      tags$style(withBusyIndicatorCSS)
+    )),
+    `data-for-btn` = id,
+    button,
+    span(
+      class = "btn-loading-container",
+      shinyjs::hidden(
+        icon("spinner", class = "btn-loading-indicator fa-spin"),
+        icon("check", class = "btn-done-indicator")
+      )
+    ),
+    shinyjs::hidden(
+      div(class = "btn-err",
+          div(icon("exclamation-circle"),
+              tags$b("Error: "),
+              span(class = "btn-err-msg")
+          )
+      )
+    )
+  )
+}
+
