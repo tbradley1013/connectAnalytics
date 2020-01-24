@@ -21,7 +21,8 @@ mod_01_server_connect_ui <- function(id){
     actionButton(
       inputId = ns("change_connection"),
       label = "Change Connection",
-      style = "position:relative;float:right;"
+      class = "btn-danger",
+      style = "position:relative;float:right;margin: 0 5px;"
     )
   )
 }
