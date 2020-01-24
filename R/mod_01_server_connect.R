@@ -1,12 +1,14 @@
 # Module UI
   
 #' @title   mod_01_server_connect_ui and mod_01_server_connect_server
-#' @description  A shiny Module.
+#' @description  A shiny Module handling the connection to a RStudio Connect
+#' server if the expected environment variables are not valid
 #'
 #' @param id shiny id
 #' @param input internal
 #' @param output internal
 #' @param session internal
+#' @param r a reactiveValues object
 #'
 #' @rdname mod_01_server_connect
 #'
@@ -16,7 +18,10 @@
 mod_01_server_connect_ui <- function(id){
   ns <- NS(id)
   tagList(
-    
+    actionButton(
+      inputId = ns("change_connection"),
+      label = "Change Connection"
+    )
   )
 }
     
@@ -28,7 +33,17 @@ mod_01_server_connect_ui <- function(id){
 mod_01_server_connect_server <- function(input, output, session, r){
   ns <- session$ns
   
+  # define the modal dialog
   dialog <- modalDialog(
+    # shinyjs::hidden(
+    #   div(
+    #     id = ns("login-failed"),
+    #     helpText(
+    #       "The connection to the specified RStudio Connect server failed",
+    #       style = "color:red;"
+    #     )
+    #   )
+    # ),
     textInput(
       inputId = ns("connect_server"),
       label = "RStudio Connect Server",
@@ -50,15 +65,50 @@ mod_01_server_connect_server <- function(input, output, session, r){
     )
   )
   
+  # a safe conneciton function
+  connect_safe <- purrr::possibly(connectapi::connect, otherwise = NA)
+  
+  # if the environmental variables exist than try to connect. If they do not
+  # then show the modal popup
   observe({
     if (is.null(r$connect_server) | is.null(r$api_key)){
       showModal(dialog)
     } else {
-      r$client <- connectapi::connect(host = r$connect_server, api_key = r$api_key)
+      r$client <- connect_safe(host = r$connect_server, api_key = r$api_key)
     }
   })
   
-  observe({})
+  # disable the submit button if the inputs are not entered
+  observe({
+    req(!is.null(input$connect_server), !is.null(input$api_key))
+    
+    if (input$connect_server == "" | input$api_key == ""){
+      shinyjs::disable(id = "connect")
+    } else {
+      shinyjs::enable(id = "connect")
+    }
+  })
+  
+  # try to connect to the server with the input information
+  observeEvent(input$connect, {
+    r$client <- connect_safe(host = input$connect_server, api_key = input$api_key)
+    removeModal()
+  })
+  
+  # reshow the modal if the connection fails
+  observe({
+    req(!is.null(r$client))
+    
+    if (is.na(r$client)){
+      showModal(dialog)
+      shinyjs::show("login-failed")
+    }
+  })
+  
+  # show dialog if the user choses to change connection
+  observeEvent(input$change_connection, {
+    showModal(dialog)
+  })
 }
     
 ## To be copied in the UI
