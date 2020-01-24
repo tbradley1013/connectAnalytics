@@ -186,3 +186,15 @@ col_6 <- function(...){
 col_4 <- function(...){
   column(4, ...)
 }
+
+
+
+# This custom function (from StackOverflow) will allow for shiny inputs to 
+# be added to the navbar header (to be used for a datetime modal)
+navbarPageWithInputs <- function(..., inputs) {
+  navbar <- shiny::navbarPage(...)
+  form <- shiny::tags$form(class = "navbar-form", inputs)
+  navbar[[3]][[1]]$children[[1]] <- htmltools::tagAppendChild(
+    navbar[[3]][[1]]$children[[1]], form)
+  navbar
+}
