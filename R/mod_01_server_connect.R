@@ -59,12 +59,10 @@ mod_01_server_connect_server <- function(input, output, session, r){
       title = "Enter Connection Info",
       footer = tagList(
         modalButton("Cancel"),
-        withBusyIndicatorUI(
-          actionButton(
-            ns("connect"),
-            "Connect!",
-            class = "btn-primary"
-          )
+        actionButton(
+          ns("connect"),
+          "Connect!",
+          class = "btn-primary"
         )
       )
     )
@@ -100,10 +98,9 @@ mod_01_server_connect_server <- function(input, output, session, r){
   
   # try to connect to the server with the input information
   observeEvent(input$connect, {
-    withBusyIndicatorServer(ns("connect"), {
-      r$client <- connect_safe(host = input$connect_server, api_key = input$api_key)
-    })
-    
+    shinyjs::disable("connect")
+    r$client <- connect_safe(host = input$connect_server, api_key = input$api_key)  
+    shinyjs::enable("connect")
     if (!is.na(r$client)){
       r$connect_server <- input$connect_server
       r$api_key <- input$api_key
