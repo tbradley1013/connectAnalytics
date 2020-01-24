@@ -4,7 +4,9 @@ app_server <- function(input, output,session) {
   
   r <- shiny::reactiveValues(
     connect_server = Sys.getenv("RSTUDIO_CONNECT_SERVER"),
-    api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY")
+    api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY"),
+    username = "tbradley"
+    # username = session$user
   )
   # List the first level callModules here
   callModule(mod_01_server_connect_server, "01_server_connect_ui_1", session = session, r = r)
