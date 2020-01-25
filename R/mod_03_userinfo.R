@@ -43,9 +43,18 @@ mod_03_userinfo_server <- function(input, output, session, r){
     
     if ("administrator" %in% user_info()$user_role){
       r$admin <- TRUE
+      r$publisher <- TRUE
     } else {
+      if ("publisher" %in% user_info()$user_role){
+        r$publisher <- TRUE
+      } else {
+        r$publisher <- FALSE
+      }
       r$admin <- FALSE
     }
+    
+    
+    
   })
   
   output$user_table <- reactable::renderReactable({
@@ -62,11 +71,23 @@ mod_03_userinfo_server <- function(input, output, session, r){
       details = function(index){
         user <- user_info()[index,]
         
-        
+        div(
+          class = "table-detail",
+          detail_field("User Email", user$email),
+          detail_field("Date Created", format(user$created_time, "%b %d, %Y")),
+          detail_field("Last Updated", format(user$upadted_time, "%b %d, %Y")),
+          detail_field("Last Active", format(user$active_time, "%b %d, %Y")),
+          detail_field("User GUID", user$guid)
+        )
       }
     )
   })
   
+  output$app_table <- reactable::renderReactable({
+    req(user_info(), r$publisher)
+    
+    
+  })
   
 }
     
