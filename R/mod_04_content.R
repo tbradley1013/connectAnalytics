@@ -16,7 +16,7 @@
 mod_04_content_ui <- function(id){
   ns <- NS(id)
   tagList(
-  
+    
   )
 }
     
@@ -26,8 +26,14 @@ mod_04_content_ui <- function(id){
 #' @export
 #' @keywords internal
     
-mod_04_content_server <- function(input, output, session){
+mod_04_content_server <- function(input, output, session, r){
   ns <- session$ns
+  
+  observe({
+    req(r$client)
+    
+    r$content <- connectapi::get_content(r$client, limit = Inf)
+  })
 }
     
 ## To be copied in the UI
