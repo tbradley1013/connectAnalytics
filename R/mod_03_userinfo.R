@@ -87,7 +87,7 @@ mod_03_userinfo_server <- function(input, output, session, r){
   })
   
   output$app_table <- reactable::renderReactable({
-    req(user_info(), r$publisher)
+    req(user_info(), r$publisher, r$content) 
     
     
   })
