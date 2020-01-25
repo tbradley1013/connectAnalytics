@@ -10,6 +10,7 @@
 golem::add_module(name = "01_server_connect") # Name of the module
 golem::add_module(name = "02_username") # Name of the module
 golem::add_module(name = "03_userinfo")
+golem::add_module(name = "04_content")
 
 ## 2.2 Add dependencies
 
