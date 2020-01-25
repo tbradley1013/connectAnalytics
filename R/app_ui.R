@@ -8,6 +8,11 @@ app_ui <- function() {
     navbarPageWithInputs(
       "connectAnalytics",
       theme = shinythemes::shinytheme("flatly"),
+      tabPanel(
+        title = "User Info",
+        icon = shiny::icon("user"),
+        mod_03_userinfo_ui("03_userinfo_ui_1")
+      ),
       inputs = tagList(
         mod_01_server_connect_ui("01_server_connect_ui_1"),
         mod_02_username_ui("02_username_ui_1")
