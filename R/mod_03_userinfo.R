@@ -16,7 +16,8 @@
 mod_03_userinfo_ui <- function(id){
   ns <- NS(id)
   tagList(
-    h3(paste("User:", textOutput(ns("user_name"))))
+    h3(textOutput(ns("user_name"))),
+    reactable::reactableOutput("user_table")
   )
 }
     
@@ -29,7 +30,7 @@ mod_03_userinfo_ui <- function(id){
 mod_03_userinfo_server <- function(input, output, session, r){
   ns <- session$ns
   
-  output$user_name <- renderText(r$username)
+  output$user_name <- renderText(paste("User:", r$username))
   
   user_info <- reactive({
     req(r$client)
@@ -45,6 +46,25 @@ mod_03_userinfo_server <- function(input, output, session, r){
     } else {
       r$admin <- FALSE
     }
+  })
+  
+  output$user_table <- reactable::renderReactable({
+    req(user_info())
+    
+    reactable::reactable(
+      user_info()[, c("username", "first_name", "last_name", "user_role")],
+      columns = list(
+        username = reactable::colDef("Username"),
+        first_name = reactable::colDef("First Name"),
+        last_name = reactable::colDef("Last Name"),
+        user_role = reactable::colDef("User Role")
+      ),
+      details = function(index){
+        user <- user_info()[index,]
+        
+        
+      }
+    )
   })
   
   
