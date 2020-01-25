@@ -13,6 +13,11 @@ app_ui <- function() {
         icon = shiny::icon("user"),
         mod_03_userinfo_ui("03_userinfo_ui_1")
       ),
+      tabPanel(
+        title = "Content",
+        icon = icon(),
+        mod_04_content_ui("04_content_ui_1")
+      ),
       inputs = tagList(
         mod_01_server_connect_ui("01_server_connect_ui_1"),
         mod_02_username_ui("02_username_ui_1")
