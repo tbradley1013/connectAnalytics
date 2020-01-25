@@ -17,11 +17,13 @@ Imports:
     connectapi (>= 0.1.0.9003),
     purrr,
     shinyjs,
-    shinythemes
+    shinythemes,
+    reactable (>= 0.1.0.9000)
 RoxygenNote: 7.0.2
 URL: https://github.com/tbradley1013/connectAnalytics
 BugReports: https://github.com/tbradley1013/connectAnalytics/issues
 Suggests: 
     testthat
-Remotes: 
-    rstudio/connectapi
+Remotes:  
+    rstudio/connectapi,
+    glin/reactable
