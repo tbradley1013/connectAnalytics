@@ -17,7 +17,7 @@ mod_03_userinfo_ui <- function(id){
   ns <- NS(id)
   tagList(
     h3(textOutput(ns("user_name"))),
-    reactable::reactableOutput("user_table")
+    reactable::reactableOutput(ns("user_table"))
   )
 }
     
