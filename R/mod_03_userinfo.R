@@ -16,7 +16,7 @@
 mod_03_userinfo_ui <- function(id){
   ns <- NS(id)
   tagList(
-    
+    h3(paste("User:", textOutput(ns("user_name"))))
   )
 }
     
@@ -26,8 +26,28 @@ mod_03_userinfo_ui <- function(id){
 #' @export
 #' @keywords internal
     
-mod_03_userinfo_server <- function(input, output, session){
+mod_03_userinfo_server <- function(input, output, session, r){
   ns <- session$ns
+  
+  output$user_name <- renderText(r$username)
+  
+  user_info <- reactive({
+    req(r$client)
+    
+    connectapi::get_users(r$client, prefix = list(username = r$username))
+  })
+  
+  observe({
+    req(user_info())
+    
+    if ("administrator" %in% user_info()$user_role){
+      r$admin <- TRUE
+    } else {
+      r$admin <- FALSE
+    }
+  })
+  
+  
 }
     
 ## To be copied in the UI
