@@ -20,7 +20,15 @@ mod_03_userinfo_ui <- function(id){
   ns <- NS(id)
   tagList(
     h3(textOutput(ns("user_name"))),
-    reactable::reactableOutput(ns("user_table"))
+    h5("User Info Table"),
+    fluidRow(
+      reactable::reactableOutput(ns("user_table"))
+    ),
+    h5("User Applications"),
+    fluidRow(
+      reactable::reactableOutput(ns("user_content"))
+    )
+    
   )
 }
     
@@ -86,10 +94,28 @@ mod_03_userinfo_server <- function(input, output, session, r){
     )
   })
   
-  output$app_table <- reactable::renderReactable({
+  output$user_content <- reactable::renderReactable({
     req(user_info(), r$publisher, r$content) 
     
+    dat <- dplyr::filter(r$content, owner_username == r$username)
     
+    reactable::reactable(
+      dat[, c("id", "name", "title", "url")],
+      columns = list(
+        id = reactable::colDef("ID"),
+        name = reactable::colDef("Name"),
+        title = reactable::colDef("Title"),
+        url = reactable::colDef(
+          "URL", 
+          cell = function(value){
+            htmltools::tags$a(href = value, target = "_blank", "link")
+          }
+        )
+      ),
+      details = function(index){
+        
+      }
+    )
   })
   
 }
