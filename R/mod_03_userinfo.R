@@ -1,12 +1,15 @@
 # Module UI
   
 #' @title   mod_03_userinfo_ui and mod_03_userinfo_server
-#' @description  A shiny Module.
+#' @description  A shiny Module to collect and display user information for a selected
+#' RStudio Connect user
 #'
 #' @param id shiny id
 #' @param input internal
 #' @param output internal
 #' @param session internal
+#' @param r a reactiveValues object with a `client` object that is a valid RStudio Connect
+#' connection
 #'
 #' @rdname mod_03_userinfo
 #'
