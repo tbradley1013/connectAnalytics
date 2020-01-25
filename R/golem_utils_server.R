@@ -68,3 +68,10 @@ errorFunc <- function(err, buttonId) {
   shinyjs::html(html = errMessage, selector = errElMsg)
   shinyjs::show(selector = errEl, anim = TRUE, animType = "fade")
 }
+
+
+# Function for styling reactable expanding sections
+detail_field <- function(name, ...) {
+  if (any(is.na(...))) NULL
+  else tagList(div(class = "detail-label", name), ...)
+}
