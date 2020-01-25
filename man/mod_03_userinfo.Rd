@@ -17,8 +17,12 @@ mod_03_userinfo_server(input, output, session, r)
 \item{output}{internal}
 
 \item{session}{internal}
+
+\item{r}{a reactiveValues object with a `client` object that is a valid RStudio Connect
+connection}
 }
 \description{
-A shiny Module.
+A shiny Module to collect and display user information for a selected
+RStudio Connect user
 }
 \keyword{internal}
