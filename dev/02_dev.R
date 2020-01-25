@@ -32,7 +32,7 @@ golem::browser_button()
 
 golem::add_js_file("button_click")
 # golem::add_js_handler( "handlers" )
-golem::add_css_file("custom")
+golem::add_css_file("styles")
 
 # 3. Documentation
 
