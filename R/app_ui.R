@@ -15,7 +15,7 @@ app_ui <- function() {
       ),
       tabPanel(
         title = "Content",
-        icon = icon(),
+        icon = icon("user"),
         mod_04_content_ui("04_content_ui_1")
       ),
       inputs = tagList(
