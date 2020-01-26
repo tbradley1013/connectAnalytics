@@ -24,6 +24,7 @@ usethis::use_package("dplyr")
 usethis::use_package("lubridate")
 usethis::use_package("plotly")
 usethis::use_package("tidyr")
+usethis::use_package("tibble")
 # usethis::use_package("thinkr") # To call each time you need a new package
 
 ## 2.3 Add tests

@@ -22,7 +22,8 @@ Imports:
     dplyr,
     lubridate,
     plotly,
-    tidyr
+    tidyr,
+    tibble
 RoxygenNote: 7.0.2
 URL: https://github.com/tbradley1013/connectAnalytics
 BugReports: https://github.com/tbradley1013/connectAnalytics/issues
