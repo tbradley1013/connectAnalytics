@@ -34,7 +34,7 @@ mod_04_content_server <- function(input, output, session, r){
     
     r$content <- connectapi::get_content(r$client, limit = Inf)
     
-    r$user_conent <- r$content %>% 
+    r$user_content <- r$content %>% 
       dplyr::filter(owner_username == r$username)
   })
   
