@@ -16,7 +16,17 @@
 mod_05_usage_ui <- function(id){
   ns <- NS(id)
   tagList(
-  
+    fluidRow(
+      div(
+        dateRangeInput(
+          inputId = ns("content_dates"),
+          label = "Select Date Range",
+          start = (Sys.Date() - lubridate::days(7)),
+          end = (Sys.Date() + lubridate::days(1))
+        ),
+        style = "width = 300px;margin: 0 auto;"
+      )
+    )
   )
 }
     
@@ -26,8 +36,14 @@ mod_05_usage_ui <- function(id){
 #' @export
 #' @keywords internal
     
-mod_05_usage_server <- function(input, output, session){
+mod_05_usage_server <- function(input, output, session, r){
   ns <- session$ns
+  
+  observe({
+    req(r$client, r$user_content)
+    
+    r$shiny_usage <- connectapi::get_usage_shiny(r$client, content_guid = )
+  })
 }
     
 ## To be copied in the UI
