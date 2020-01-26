@@ -9,15 +9,15 @@ app_ui <- function() {
       "connectAnalytics",
       theme = shinythemes::shinytheme("flatly"),
       tabPanel(
-        title = "User Info",
-        icon = shiny::icon("user"),
-        mod_03_userinfo_ui("03_userinfo_ui_1")
-      ),
-      tabPanel(
         title = "Content",
         icon = icon("user"),
         mod_04_content_ui("04_content_ui_1"),
         mod_05_usage_ui("05_usage_ui_1")
+      ),
+      tabPanel(
+        title = "User Info",
+        icon = shiny::icon("user"),
+        mod_03_userinfo_ui("03_userinfo_ui_1")
       ),
       inputs = tagList(
         mod_01_server_connect_ui("01_server_connect_ui_1"),
