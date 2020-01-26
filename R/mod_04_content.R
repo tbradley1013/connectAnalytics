@@ -33,7 +33,12 @@ mod_04_content_server <- function(input, output, session, r){
     req(r$client)
     
     r$content <- connectapi::get_content(r$client, limit = Inf)
+    
+    r$user_conent <- r$content %>% 
+      dplyr::filter(owner_username == r$username)
   })
+  
+  
 }
     
 ## To be copied in the UI
