@@ -21,6 +21,7 @@ usethis::use_package("shinyjs")
 usethis::use_package("shinythemes")
 usethis::use_dev_package("reactable")
 usethis::use_package("dplyr")
+usethis::use_package("lubridate")
 # usethis::use_package("thinkr") # To call each time you need a new package
 
 ## 2.3 Add tests
