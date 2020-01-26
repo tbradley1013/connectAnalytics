@@ -19,7 +19,8 @@ Imports:
     shinyjs,
     shinythemes,
     reactable (>= 0.1.0.9000),
-    dplyr
+    dplyr,
+    lubridate
 RoxygenNote: 7.0.2
 URL: https://github.com/tbradley1013/connectAnalytics
 BugReports: https://github.com/tbradley1013/connectAnalytics/issues
