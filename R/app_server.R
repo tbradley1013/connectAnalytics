@@ -6,7 +6,6 @@ app_server <- function(input, output,session) {
     connect_server = golem::get_golem_options("host"),
     api_key = golem::get_golem_options("api_key"),
     username = ifelse(is.null(golem::get_golem_options("user")), session$user, golem::get_golem_options("user"))
-    # username = session$user
   )
   # List the first level callModules here
   callModule(mod_01_server_connect_server, "01_server_connect_ui_1", session = session, r = r)
