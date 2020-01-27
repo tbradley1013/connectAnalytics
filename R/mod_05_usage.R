@@ -24,20 +24,42 @@ mod_05_usage_ui <- function(id){
           start = (Sys.Date() - lubridate::days(7)),
           end = (Sys.Date() + lubridate::days(1))
         ),
-        style = "width = 300px;margin: 0 auto;"
+        style = "margin-left:20px"
       )
     ),
     fluidRow(
       plotly::plotlyOutput(ns("usage_line_graph"))
     ),
     fluidRow(
-      plotly::plotlyOutput(ns("shiny_usage_by_date")),
-      plotly::plotlyOutput(ns("shiny_usage_by_user"))
-    ),
-    fluidRow(
-      plotly::plotlyOutput(ns("static_usage_by_date")),
-      plotly::plotlyOutput(ns("static_usage_by_user"))
+      shinydashboard::tabBox(
+        title = "Shiny Usage",
+        tabPanel(
+          title = "By Date",
+          plotly::plotlyOutput(ns("shiny_usage_by_date")) 
+        ),
+        tabPanel(
+          title = "By User",
+          plotly::plotlyOutput(ns("shiny_usage_by_user"))
+        )
+        
+      ),
+      shinydashboard::tabBox(
+        title = "Static Usage",
+        tabPanel(
+          title = "By Date",
+          plotly::plotlyOutput(ns("static_usage_by_date"))
+        ),
+        tabPanel(
+          title = "By User",
+          plotly::plotlyOutput(ns("static_usage_by_user"))
+        )
+      )
+      
     )
+    # fluidRow(
+    #   ,
+    #   
+    # )
   )
 }
     
@@ -103,7 +125,7 @@ mod_05_usage_server <- function(input, output, session, r){
         y = ~value, 
         color = ~name,
         hoverinfo = "text",
-        text = glue::glue(
+        text = ~glue::glue(
           "<center><b>{name}</b></center>",
           "<b>Date</b>: {date}", 
           "<b>Count</b>: {value}",
@@ -208,7 +230,7 @@ mod_05_usage_server <- function(input, output, session, r){
         barmode = "stack",
         xaxis = list(title = ""),
         yaxis = list(title = "Count"),
-        title = "App Usage by User"
+        title = "App Usage By User"
       )
   })
   
@@ -263,7 +285,7 @@ mod_05_usage_server <- function(input, output, session, r){
         barmode = "stack",
         xaxis = list(title = ""),
         yaxis = list(title = "Count"),
-        title = "Static Content Usage by User"
+        title = "Static Content Usage By User"
       )
   })
 }
