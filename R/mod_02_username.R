@@ -16,11 +16,13 @@
 mod_02_username_ui <- function(id){
   ns <- NS(id)
   tagList(
-    actionButton(
-      inputId = ns("change_username"),
-      label = "Change User",
-      class = "btn-success",
-      style = "position:relative;float:right;margin: 0 5px;"
+    shinyjs::hidden(
+      actionButton(
+        inputId = ns("change_username"),
+        label = "Change User",
+        class = "btn-success",
+        style = "position:relative;float:right;margin: 0 5px;"
+      )
     )
   )
 }
@@ -33,6 +35,12 @@ mod_02_username_ui <- function(id){
     
 mod_02_username_server <- function(input, output, session, r){
   ns <- session$ns
+  
+  observe({
+    if (golem::get_golem_options("switch_user")){
+      shinyjs::show("change_username")
+    }
+  })
   
   dialog <- reactive({
     dialog <- modalDialog(
