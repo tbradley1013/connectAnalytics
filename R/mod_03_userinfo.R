@@ -91,7 +91,7 @@ mod_03_userinfo_server <- function(input, output, session, r){
           class = "table-detail",
           detail_field("User Email", user$email),
           detail_field("Date Created", format(user$created_time, "%b %d, %Y")),
-          detail_field("Last Updated", format(user$upadted_time, "%b %d, %Y")),
+          detail_field("Last Updated", format(user$updated_time, "%b %d, %Y")),
           detail_field("Last Active", format(user$active_time, "%b %d, %Y")),
           detail_field("User GUID", user$guid)
         )
