@@ -33,6 +33,10 @@ mod_05_usage_ui <- function(id){
     fluidRow(
       plotly::plotlyOutput(ns("shiny_usage_by_date")),
       plotly::plotlyOutput(ns("shiny_usage_by_user"))
+    ),
+    fluidRow(
+      plotly::plotlyOutput(ns("static_usage_by_date")),
+      plotly::plotlyOutput(ns("static_usage_by_user"))
     )
   )
 }
@@ -146,7 +150,6 @@ mod_05_usage_server <- function(input, output, session, r){
     usage_shiny() %>% 
       dplyr::mutate(date = lubridate::date(started)) %>% 
       dplyr::count(date, title) %>% 
-      # dplyr::mutate(title = ifelse(is.na(title), "Removed Content", title)) %>% 
       plotly::plot_ly(
         x = ~date, 
         y = ~n, 
@@ -195,6 +198,61 @@ mod_05_usage_server <- function(input, output, session, r){
         xaxis = list(title = ""),
         yaxis = list(title = "Count"),
         title = "App Usage by User"
+      )
+  })
+  
+  output$static_usage_by_date <- plotly::renderPlotly({
+    req(usage_static())
+    
+    usage_static() %>% 
+      dplyr::mutate(date = lubridate::date(time)) %>% 
+      dplyr::count(date, title) %>% 
+      plotly::plot_ly(
+        x = ~date, 
+        y = ~n, 
+        color = ~title, 
+        type = "bar", 
+        hoverinfo = "text",
+        text = ~glue::glue(
+          "<b>App Name</b>: {title}",
+          "<b>Date</b>: {date}", 
+          "<b>Count</b>: {n}",
+          .sep = "<br>"
+        )
+      ) %>% 
+      plotly::layout(
+        yaxis = list(
+          title = "Count"
+        ),
+        xaxis = list(title = ""),
+        title = "Static Content Usage By Date",
+        barmode = "stack"
+      )
+  })
+  
+  output$static_usage_by_user <- plotly::renderPlotly({
+    req(usage_static())
+    
+    usage_static() %>% 
+      dplyr::count(title, username, first_name, last_name) %>% 
+      plotly::plot_ly(
+        x = ~title,
+        y = ~n,
+        color = ~username,
+        type = "bar",
+        hoverinfo = "text",
+        text = ~glue::glue(
+          "<b>App Name</b>: {title}",
+          "<b>User</b>: {first_name} {last_name}", 
+          "<b>Count</b>: {n}",
+          .sep = "<br>"
+        )
+      ) %>% 
+      plotly::layout(
+        barmode = "stack",
+        xaxis = list(title = ""),
+        yaxis = list(title = "Count"),
+        title = "Static Content Usage by User"
       )
   })
 }
