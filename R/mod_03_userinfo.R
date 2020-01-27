@@ -50,7 +50,7 @@ mod_03_userinfo_server <- function(input, output, session, r){
     
     r$all_users <- all_users
     
-    all_users[all_users$username == r$username]
+    all_users[all_users$username == r$username, ]
     # connectapi::get_users(r$client, prefix = list(username = r$username))
   })
   
