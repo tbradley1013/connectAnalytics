@@ -28,7 +28,6 @@ mod_05_usage_ui <- function(id){
       )
     ),
     fluidRow(
-      textOutput("temp_text"),
       plotly::plotlyOutput(ns("usage_line_graph"))
     )
   )
@@ -62,12 +61,6 @@ mod_05_usage_server <- function(input, output, session, r){
       to = input$content_dates[2],
       limit = Inf
     )
-  })
-  
-  output$temp_text <- renderText({
-    req(r$shiny_usage, r$static_content)
-    
-    return("Usage is loaded")
   })
   
   output$usage_line_graph <- plotly::renderPlotly({
