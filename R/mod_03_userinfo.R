@@ -46,7 +46,12 @@ mod_03_userinfo_server <- function(input, output, session, r){
   user_info <- reactive({
     req(r$client)
     
-    connectapi::get_users(r$client, prefix = list(username = r$username))
+    all_users <- connectapi::get_users(r$client, page_size = Inf)
+    
+    r$all_users <- all_users
+    
+    all_users[all_users$username == r$username]
+    # connectapi::get_users(r$client, prefix = list(username = r$username))
   })
   
   observe({

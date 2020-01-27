@@ -30,7 +30,6 @@ app_ui <- function() {
 #' @import shiny
 golem_add_external_resources <- function(){
   
-  # uncomment once package is built
   addResourcePath(
     'www', system.file('app/www', package = 'connectAnalytics')
   )
