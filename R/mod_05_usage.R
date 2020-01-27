@@ -221,7 +221,7 @@ mod_05_usage_server <- function(input, output, session, r){
         hoverinfo = "text",
         text = ~glue::glue(
           "<b>App Name</b>: {title}",
-          "<b>User</b>: {first_name} {last_name}", 
+          "<b>User</b>: {first_name} {ifelse(last_name == 'Anonymous', '', last_name)}", 
           "<b>Count</b>: {n}",
           .sep = "<br>"
         )
@@ -276,7 +276,7 @@ mod_05_usage_server <- function(input, output, session, r){
         hoverinfo = "text",
         text = ~glue::glue(
           "<b>App Name</b>: {title}",
-          "<b>User</b>: {first_name} {last_name}", 
+          "<b>User</b>: {first_name} {ifelse(last_name == 'Anonymous', '', last_name)}", 
           "<b>Count</b>: {n}",
           .sep = "<br>"
         )
