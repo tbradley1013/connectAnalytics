@@ -97,13 +97,11 @@ mod_05_usage_server <- function(input, output, session, r){
       plotly::plot_ly(x = ~date, y = ~value, color = ~name) %>% 
       plotly::add_lines() %>% 
       plotly::layout(
-        title = paste("Overall App Usage in the last", n_days, "days"),
+        title = paste("Overall Content Usage in the last", n_days, "days"),
         yaxis = list(
           title = "Count"
         ), 
-        xaxis = list(
-          title = "Date"
-        )
+        xaxis = list(title = "")
       )
     
     return(p)
@@ -114,6 +112,22 @@ mod_05_usage_server <- function(input, output, session, r){
     req(r$shiny_usage)
     
     r$shiny_usage %>% 
+      dplyr::left_join(
+        r$user_content[, c("guid", "owner_username", "title")],
+        by = c("content_guid" = "guid")
+      ) %>% 
+      dplyr::left_join(
+        r$all_users[, c("username", "first_name", "last_name", "guid")],
+        by = c("user_guid" = "guid")
+      ) %>% 
+      dplyr::mutate_at(dplyr::vars(username, first_name, last_name), list(~ifelse(is.na(.), "Anonymous", .))) %>% 
+      dplyr::mutate(title = ifelse(is.na(title), "Removed Content", title)) 
+  })
+  
+  usage_static <- reactive({
+    req(r$static_usage)
+    
+    r$static_usage %>% 
       dplyr::left_join(
         r$user_content[, c("guid", "owner_username", "title")],
         by = c("content_guid" = "guid")
@@ -150,6 +164,8 @@ mod_05_usage_server <- function(input, output, session, r){
         yaxis = list(
           title = "App Usage Count"
         ),
+        xaxis = list(title = ""),
+        title = "App Usage By Date",
         barmode = "stack"
       )
     
@@ -178,7 +194,7 @@ mod_05_usage_server <- function(input, output, session, r){
         barmode = "stack",
         xaxis = list(title = ""),
         yaxis = list(title = "Count"),
-        title = "App usage by user"
+        title = "App Usage by User"
       )
   })
 }
