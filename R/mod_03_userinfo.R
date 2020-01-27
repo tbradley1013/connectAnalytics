@@ -123,6 +123,9 @@ mod_03_userinfo_server <- function(input, output, session, r){
     )
   })
   
+  outputOptions(output, "user_table", suspendWhenHidden = FALSE)
+  outputOptions(output, "user_content", suspendWhenHidden = FALSE)
+  
 }
     
 ## To be copied in the UI
