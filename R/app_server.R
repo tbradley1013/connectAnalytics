@@ -1,5 +1,5 @@
 #' @import shiny
-app_server <- function(input, output,session) {
+ca_server <- function(input, output,session) {
   session$onSessionEnded(stopApp)
   
   r <- shiny::reactiveValues(

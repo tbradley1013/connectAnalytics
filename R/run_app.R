@@ -16,7 +16,7 @@ connectAnalytics <- function(..., host = Sys.getenv("RSTUDIO_CONNECT_SERVER"),
                              api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY"),
                              user = NULL, switch_user = TRUE) {
   golem::with_golem_options(
-    app = shiny::shinyApp(ui = app_ui, server = app_server), 
+    app = shiny::shinyApp(ui = ca_ui, server = ca_server), 
     golem_opts = list(host = host, api_key = api_key, user = user, switch_user = switch_user, ...)
   )
 }

@@ -1,5 +1,5 @@
 #' @import shiny
-app_ui <- function() {
+ca_ui <- function() {
   tagList(
     # Leave this function for adding external resources
     shinyjs::useShinyjs(),
