@@ -29,6 +29,10 @@ mod_05_usage_ui <- function(id){
     ),
     fluidRow(
       plotly::plotlyOutput(ns("usage_line_graph"))
+    ),
+    fluidRow(
+      plotly::plotlyOutput(ns("shiny_usage_by_date")),
+      plotly::plotlyOutput(ns("shiny_usage_by_user"))
     )
   )
 }
@@ -105,6 +109,78 @@ mod_05_usage_server <- function(input, output, session, r){
     return(p)
   })
   
+  
+  usage_shiny <- reactive({
+    req(r$shiny_usage)
+    
+    r$shiny_usage %>% 
+      dplyr::left_join(
+        r$user_content[, c("guid", "owner_username", "title")],
+        by = c("content_guid" = "guid")
+      ) %>% 
+      dplyr::left_join(
+        r$all_users[, c("username", "first_name", "last_name", "guid")],
+        by = c("user_guid" = "guid")
+      ) %>% 
+      dplyr::mutate_at(dplyr::vars(username, first_name, last_name), list(~ifelse(is.na(.), "Anonymous", .))) %>% 
+      dplyr::mutate(title = ifelse(is.na(title), "Removed Content", title)) 
+  })
+  
+  output$shiny_usage_by_date <- plotly::renderPlotly({
+    req(usage_shiny())
+    
+    usage_shiny() %>% 
+      dplyr::mutate(date = lubridate::date(started)) %>% 
+      dplyr::count(date, title) %>% 
+      # dplyr::mutate(title = ifelse(is.na(title), "Removed Content", title)) %>% 
+      plotly::plot_ly(
+        x = ~date, 
+        y = ~n, 
+        color = ~title, 
+        type = "bar", 
+        hoverinfo = "text",
+        text = ~glue::glue(
+          "<b>App Name</b>: {title}",
+          "<b>Date</b>: {date}", 
+          "<b>Count</b>: {n}",
+          .sep = "<br>"
+        )
+      ) %>% 
+      plotly::layout(
+        yaxis = list(
+          title = "App Usage Count"
+        ),
+        barmode = "stack"
+      )
+    
+  })
+  
+  
+  output$shiny_usage_by_user <- plotly::renderPlotly({
+    req(usage_shiny())
+    
+    usage_shiny() %>% 
+      dplyr::count(title, username, first_name, last_name) %>% 
+      plotly::plot_ly(
+        x = ~title,
+        y = ~n,
+        color = ~username,
+        type = "bar",
+        hoverinfo = "text",
+        text = ~glue::glue(
+          "<b>App Name</b>: {title}",
+          "<b>User</b>: {first_name} {last_name}", 
+          "<b>Count</b>: {n}",
+          .sep = "<br>"
+        )
+      ) %>% 
+      plotly::layout(
+        barmode = "stack",
+        xaxis = list(title = ""),
+        yaxis = list(title = "Count"),
+        title = "App usage by user"
+      )
+  })
 }
     
 ## To be copied in the UI
