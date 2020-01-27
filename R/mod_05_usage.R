@@ -98,7 +98,18 @@ mod_05_usage_server <- function(input, output, session, r){
       dplyr::mutate(total = n_shiny + n_static) %>% 
       dplyr::rename(`# Total` = total, `# Shiny` = n_shiny, `# Static` = n_static) %>% 
       tidyr::pivot_longer(cols = `# Shiny`:`# Total`, values_drop_na = FALSE) %>% 
-      plotly::plot_ly(x = ~date, y = ~value, color = ~name) %>% 
+      plotly::plot_ly(
+        x = ~date, 
+        y = ~value, 
+        color = ~name,
+        hoverinfo = "text",
+        text = glue::glue(
+          "<center><b>{name}</b></center>",
+          "<b>Date</b>: {date}", 
+          "<b>Count</b>: {value}",
+          .sep = "<br>"
+        )
+      ) %>% 
       plotly::add_lines() %>% 
       plotly::layout(
         title = paste("Overall Content Usage in the last", n_days, "days"),
@@ -165,7 +176,7 @@ mod_05_usage_server <- function(input, output, session, r){
       ) %>% 
       plotly::layout(
         yaxis = list(
-          title = "App Usage Count"
+          title = "Count"
         ),
         xaxis = list(title = ""),
         title = "App Usage By Date",
