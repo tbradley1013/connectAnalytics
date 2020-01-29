@@ -16,7 +16,26 @@
 mod_06_admin_ui <- function(id){
   ns <- NS(id)
   tagList(
-  
+    shinyjs::hidden(
+      tabPanel(
+        title = "Admin",
+        icon = icon("admin"),
+        fluidRow(
+          div(
+            dateRangeInput(
+              inputId = ns("content_dates"),
+              label = "Select Date Range",
+              start = (Sys.Date() - lubridate::days(7)),
+              end = Sys.Date()
+            ),
+            style = "margin-left:20px"
+          )
+        ),
+        fluidRow(
+          plotly::plotlyOutput("admin_line_graph")
+        )
+      )
+    )
   )
 }
     
@@ -26,8 +45,20 @@ mod_06_admin_ui <- function(id){
 #' @export
 #' @keywords internal
     
-mod_06_admin_server <- function(input, output, session){
+mod_06_admin_server <- function(input, output, session, r){
   ns <- session$ns
+  
+  observe({
+    req(r$admin)
+    
+    shinyjs::show("admin-tab")
+  })
+  
+  output$admin_line_graph <- plotly::renderPlotly({
+    req(r$shiny_usage_all, r$static_usage_all, r$admin)
+    
+    overall_usage_line(r$shiny_usage_all, r$static_usage_all, input = input, r = r, admin = TRUE)
+  })
 }
     
 ## To be copied in the UI
