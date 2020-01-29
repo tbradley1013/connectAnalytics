@@ -107,7 +107,7 @@ mod_05_usage_server <- function(input, output, session, r){
     req(r$shiny_usage, r$static_usage)
     
     # This is defined in R/golem_utils_server.R
-    overall_usage_line(r$shiny_usage, r$static_usage, from = input$content_dates[1], to = input$content_dates[2], r = r, admin = FALSE)
+    overall_usage_line(r$shiny_usage, r$static_usage, from = input$content_dates[1], to = input$content_dates[2], username = r$username, admin = FALSE)
   })
   
   

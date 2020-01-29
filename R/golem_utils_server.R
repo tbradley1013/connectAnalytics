@@ -77,7 +77,7 @@ detail_field <- function(name, ...) {
 }
 
 
-overall_usage_line <- function(shiny_usage, static_usage, from, to, r, admin = FALSE){
+overall_usage_line <- function(shiny_usage, static_usage, from, to, username, admin = FALSE){
   
   shiny_usage <- shiny_usage %>% 
     dplyr::mutate(date = lubridate::date(started)) %>% 
@@ -92,7 +92,7 @@ overall_usage_line <- function(shiny_usage, static_usage, from, to, r, admin = F
   if (admin){
     title <- glue::glue("Overall Content Views for Entire Server ({format(from)} - {format(to)})")
   } else {
-    title <- glue::glue("Overall Content Usage for {r$username}'s Content ({format(from)} - {format(to)})")
+    title <- glue::glue("Overall Content Usage for {username}'s Content ({format(from)} - {format(to)})")
   }
   
   p <- date_tbl %>% 
