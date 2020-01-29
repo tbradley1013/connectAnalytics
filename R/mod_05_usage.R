@@ -22,7 +22,7 @@ mod_05_usage_ui <- function(id){
           inputId = ns("content_dates"),
           label = "Select Date Range",
           start = (Sys.Date() - lubridate::days(7)),
-          end = (Sys.Date() + lubridate::days(1))
+          end = Sys.Date()
         ),
         style = "margin-left:20px"
       )
@@ -80,7 +80,7 @@ mod_05_usage_server <- function(input, output, session, r){
       r$client, 
       # content_guid = r$user_content$guid,
       from = input$content_dates[1], 
-      to = input$content_dates[2],
+      to = (input$content_dates[2] + lubridate::days(1)),
       limit = Inf
     )
     
@@ -88,7 +88,7 @@ mod_05_usage_server <- function(input, output, session, r){
       r$client, 
       # content_guid = r$user_content$guid,
       from = input$content_dates[1],
-      to = input$content_dates[2],
+      to = (input$content_dates[2] + lubridate::days(1)),
       limit = Inf
     )
     
