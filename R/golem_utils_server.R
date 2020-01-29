@@ -114,7 +114,7 @@ overall_usage_line <- function(shiny_usage, static_usage, input, r, admin = FALS
       color = ~name,
       hoverinfo = "text",
       text = ~glue::glue(
-        "<span style='width:100%;margin:0 auto;'><b>{name}</b></span>",
+        "<b>{name}</b>",
         "<b>Date</b>: {date}", 
         "<b>Count</b>: {value}",
         .sep = "<br>"
