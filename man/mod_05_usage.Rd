@@ -17,8 +17,12 @@ mod_05_usage_server(input, output, session, r)
 \item{output}{internal}
 
 \item{session}{internal}
+
+\item{r}{a reactiveValues object}
 }
 \description{
-A shiny Module.
+A shiny Module to get the usage for the user defined window 
+to show them how much their content is being used, when it is being used and 
+who is using it.
 }
 \keyword{internal}

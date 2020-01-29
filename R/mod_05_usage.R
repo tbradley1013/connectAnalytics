@@ -1,12 +1,15 @@
 # Module UI
   
-#' @title   mod_05_usage_ui and mod_05_usage_server
-#' @description  A shiny Module.
+#' @title   mod_05_usage_ui and mod_05_usage_server 
+#' @description  A shiny Module to get the usage for the user defined window 
+#' to show them how much their content is being used, when it is being used and 
+#' who is using it. 
 #'
 #' @param id shiny id
 #' @param input internal
 #' @param output internal
 #' @param session internal
+#' @param r a reactiveValues object
 #'
 #' @rdname mod_05_usage
 #'
