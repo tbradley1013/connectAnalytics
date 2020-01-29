@@ -17,9 +17,8 @@ mod_06_admin_ui <- function(id){
   ns <- NS(id)
   tagList(
     shinyjs::hidden(
-      tabPanel(
-        title = "Admin",
-        icon = icon("admin"),
+      div(
+        id = ns("admin-tab"),
         fluidRow(
           div(
             dateRangeInput(
@@ -47,6 +46,12 @@ mod_06_admin_ui <- function(id){
     
 mod_06_admin_server <- function(input, output, session, r){
   ns <- session$ns
+  
+  observe({
+    if (!r$admin){
+      shiny::hideTab(inputId = "navbar-tabs", target = "Admin")
+    }
+  })
   
   observe({
     req(r$admin)
