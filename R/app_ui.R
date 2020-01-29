@@ -19,6 +19,7 @@ ca_ui <- function() {
         icon = shiny::icon("user"),
         mod_03_userinfo_ui("03_userinfo_ui_1")
       ),
+      mod_06_admin_ui("06_admin_ui_1"), # This module contains the entire tab
       inputs = tagList(
         mod_01_server_connect_ui("01_server_connect_ui_1"),
         mod_02_username_ui("02_username_ui_1")
