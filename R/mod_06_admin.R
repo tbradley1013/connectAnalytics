@@ -62,7 +62,7 @@ mod_06_admin_server <- function(input, output, session, r){
   output$admin_line_graph <- plotly::renderPlotly({
     req(r$shiny_usage_all, r$static_usage_all, r$admin)
     
-    overall_usage_line(r$shiny_usage_all, r$static_usage_all, input = input, r = r, admin = TRUE)
+    overall_usage_line(r$shiny_usage_all, r$static_usage_all, from = input$content_dates[1], to = input$content_dates[2], r = r, admin = TRUE)
   })
 }
     

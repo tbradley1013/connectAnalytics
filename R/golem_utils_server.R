@@ -77,7 +77,7 @@ detail_field <- function(name, ...) {
 }
 
 
-overall_usage_line <- function(shiny_usage, static_usage, input, r, admin = FALSE){
+overall_usage_line <- function(shiny_usage, static_usage, from, to, r, admin = FALSE){
   
   shiny_usage <- shiny_usage %>% 
     dplyr::mutate(date = lubridate::date(started)) %>% 
@@ -87,12 +87,12 @@ overall_usage_line <- function(shiny_usage, static_usage, input, r, admin = FALS
     dplyr::mutate(date = lubridate::date(time)) %>% 
     dplyr::count(date, name = "n_static")
   
-  date_tbl <- tibble::tibble(date = seq.Date(from = input$content_dates[1], to = input$content_dates[2], by = 1))
+  date_tbl <- tibble::tibble(date = seq.Date(from = from, to = to, by = 1))
   
   if (admin){
-    title <- glue::glue("Overall Content Views for Entire Server ({format(input$content_dates[1])} - {format(input$content_dates[2])})")
+    title <- glue::glue("Overall Content Views for Entire Server ({format(from)} - {format(to)})")
   } else {
-    title <- glue::glue("Overall Content Usage for {r$username}'s Content ({format(input$content_dates[1])} - {format(input$content_dates[2])})")
+    title <- glue::glue("Overall Content Usage for {r$username}'s Content ({format(from)} - {format(to)})")
   }
   
   p <- date_tbl %>% 
