@@ -19,4 +19,11 @@ ca_server <- function(input, output,session) {
   callModule(mod_05_usage_server, "05_usage_ui_1", session = session, r = r)
   
   callModule(mod_06_admin_server, "06_admin_ui_1", session = session, r = r)
+  
+  observe({
+    req(r$shiny_usage, r$static_usage)
+    
+    shinyjs::show("app-content")
+    shinyjs::hide("loading-content")
+  })
 }

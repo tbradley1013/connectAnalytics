@@ -4,25 +4,38 @@ ca_ui <- function() {
     # Leave this function for adding external resources
     shinyjs::useShinyjs(),
     golem_add_external_resources(),
-    # List the first level UI elements here 
-    navbarPageWithInputs(
-      "connectAnalytics",
-      theme = shinythemes::shinytheme("flatly"),
-      tabPanel(
-        title = "Content",
-        icon = icon("user"),
-        mod_04_content_ui("04_content_ui_1"), # This module has no UI - it is simply loading the users content
-        mod_05_usage_ui("05_usage_ui_1")
-      ),
-      tabPanel(
-        title = "User Info",
-        icon = shiny::icon("user"),
-        mod_03_userinfo_ui("03_userinfo_ui_1")
-      ),
-      mod_06_admin_ui("06_admin_ui_1"), # This module contains the entire tab
-      inputs = tagList(
-        mod_01_server_connect_ui("01_server_connect_ui_1"),
-        mod_02_username_ui("02_username_ui_1")
+    div(
+      id = "loading-content",
+      h2("Loading...", style = "margin-top:300px")
+    ),
+    shinyjs::hidden(
+      div(
+        id = "app-content",
+        navbarPageWithInputs(
+          "connectAnalytics",
+          id = "navbar-tabs",
+          theme = shinythemes::shinytheme("flatly"),
+          tabPanel(
+            title = "Content",
+            icon = icon("user"),
+            mod_04_content_ui("04_content_ui_1"), # This module has no UI - it is simply loading the users content
+            mod_05_usage_ui("05_usage_ui_1")
+          ),
+          tabPanel(
+            title = "User Info",
+            icon = shiny::icon("user"),
+            mod_03_userinfo_ui("03_userinfo_ui_1")
+          ),
+          tabPanel(
+            title = "Admin",
+            icon = icon("toolbox"),
+            mod_06_admin_ui("06_admin_ui_1") 
+          ), 
+          inputs = tagList(
+            mod_01_server_connect_ui("01_server_connect_ui_1"),
+            mod_02_username_ui("02_username_ui_1")
+          )
+        )
       )
     )
   )
