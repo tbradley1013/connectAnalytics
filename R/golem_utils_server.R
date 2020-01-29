@@ -75,3 +75,59 @@ detail_field <- function(name, ...) {
   if (any(is.na(...))) NULL
   else tagList(div(class = "detail-label", name), ...)
 }
+
+
+overall_usage_line <- function(shiny_usage, static_usage, input, r, admin = FALSE){
+  
+  shiny_usage <- shiny_usage %>% 
+    dplyr::mutate(date = lubridate::date(started)) %>% 
+    dplyr::count(date, name = "n_shiny")
+  
+  static_usage <- static_usage %>% 
+    dplyr::mutate(date = lubridate::date(time)) %>% 
+    dplyr::count(date, name = "n_static")
+  
+  date_tbl <- tibble::tibble(date = seq.Date(from = input$content_dates[1], to = input$content_dates[2], by = 1))
+  
+  if (admin){
+    title <- glue::glue("Overall Content Views for Entire Server ({format(input$content_dates[1])} - {format(input$content_dates[2])})")
+  } else {
+    title <- glue::glue("Overall Content Usage for {r$username}'s Content ({format(input$content_dates[1])} - {format(input$content_dates[2])})")
+  }
+  
+  p <- date_tbl %>% 
+    dplyr::left_join(
+      shiny_usage, 
+      by = "date"
+    ) %>%  
+    dplyr::left_join(
+      static_usage, 
+      by = "date"
+    ) %>% 
+    dplyr::mutate_at(dplyr::vars(n_shiny, n_static), list(~ifelse(is.na(.), 0, .))) %>% 
+    dplyr::mutate(total = n_shiny + n_static) %>% 
+    dplyr::rename(`# Total` = total, `# Shiny` = n_shiny, `# Static` = n_static) %>% 
+    tidyr::pivot_longer(cols = `# Shiny`:`# Total`, values_drop_na = FALSE) %>% 
+    plotly::plot_ly(
+      x = ~date, 
+      y = ~value, 
+      color = ~name,
+      hoverinfo = "text",
+      text = ~glue::glue(
+        "<span style='width:100%;margin:0 auto;'><b>{name}</b></span>",
+        "<b>Date</b>: {date}", 
+        "<b>Count</b>: {value}",
+        .sep = "<br>"
+      )
+    ) %>% 
+    plotly::add_lines() %>% 
+    plotly::layout(
+      title = title,
+      yaxis = list(
+        title = "Count"
+      ), 
+      xaxis = list(title = "")
+    )
+  
+  return(p)
+}
