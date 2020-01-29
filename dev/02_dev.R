@@ -12,6 +12,7 @@ golem::add_module(name = "02_username") # Name of the module
 golem::add_module(name = "03_userinfo")
 golem::add_module(name = "04_content")
 golem::add_module(name = "05_usage")
+golem::add_module(name = "06_admin")
 
 ## 2.2 Add dependencies
 
