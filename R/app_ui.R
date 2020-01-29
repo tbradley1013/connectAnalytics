@@ -11,7 +11,7 @@ ca_ui <- function() {
       tabPanel(
         title = "Content",
         icon = icon("user"),
-        mod_04_content_ui("04_content_ui_1"),
+        mod_04_content_ui("04_content_ui_1"), # This module has no UI - it is simply loading the users content
         mod_05_usage_ui("05_usage_ui_1")
       ),
       tabPanel(
