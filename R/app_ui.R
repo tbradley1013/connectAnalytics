@@ -6,6 +6,7 @@ ca_ui <- function() {
     golem_add_external_resources(),
     div(
       id = "loading-content",
+      class = "loading-content-screen",
       h2("Loading...", style = "margin-top:300px")
     ),
     shinyjs::hidden(
