@@ -126,31 +126,6 @@ mod_05_usage_server <- function(input, output, session, r){
   output$shiny_usage_by_date <- plotly::renderPlotly({
     req(usage_shiny())
     
-    # usage_shiny() %>% 
-    #   dplyr::mutate(date = lubridate::date(started)) %>% 
-    #   dplyr::count(date, title) %>% 
-    #   plotly::plot_ly(
-    #     x = ~date, 
-    #     y = ~n, 
-    #     color = ~title, 
-    #     type = "bar", 
-    #     hoverinfo = "text",
-    #     text = ~glue::glue(
-    #       "<b>App Name</b>: {title}",
-    #       "<b>Date</b>: {date}", 
-    #       "<b>Count</b>: {n}",
-    #       .sep = "<br>"
-    #     )
-    #   ) %>% 
-    #   plotly::layout(
-    #     yaxis = list(
-    #       title = "Count"
-    #     ),
-    #     xaxis = list(title = ""),
-    #     title = "App Usage By Date",
-    #     barmode = "stack"
-    #   )
-    
     usage_by_date(usage_shiny(), time_col = started, type = "Shiny App")
     
   })
@@ -159,86 +134,17 @@ mod_05_usage_server <- function(input, output, session, r){
   output$shiny_usage_by_user <- plotly::renderPlotly({
     req(usage_shiny())
     
-    # usage_shiny() %>% 
-    #   dplyr::count(title, username, first_name, last_name) %>% 
-    #   plotly::plot_ly(
-    #     x = ~title,
-    #     y = ~n,
-    #     color = ~username,
-    #     type = "bar",
-    #     hoverinfo = "text",
-    #     text = ~glue::glue(
-    #       "<b>App Name</b>: {title}",
-    #       "<b>User</b>: {first_name} {ifelse(last_name == 'Anonymous', '', last_name)}", 
-    #       "<b>Count</b>: {n}",
-    #       .sep = "<br>"
-    #     )
-    #   ) %>% 
-    #   plotly::layout(
-    #     barmode = "stack",
-    #     xaxis = list(title = ""),
-    #     yaxis = list(title = "Count"),
-    #     title = "App Usage By User"
-    #   )
-    
     usage_by_user(usage_shiny(), type = "Shiny App")
   })
   
   output$static_usage_by_date <- plotly::renderPlotly({
     req(usage_static())
     
-    # usage_static() %>% 
-    #   dplyr::mutate(date = lubridate::date(time)) %>% 
-    #   dplyr::count(date, title) %>% 
-    #   plotly::plot_ly(
-    #     x = ~date, 
-    #     y = ~n, 
-    #     color = ~title, 
-    #     type = "bar", 
-    #     hoverinfo = "text",
-    #     text = ~glue::glue(
-    #       "<b>App Name</b>: {title}",
-    #       "<b>Date</b>: {date}", 
-    #       "<b>Count</b>: {n}",
-    #       .sep = "<br>"
-    #     )
-    #   ) %>% 
-    #   plotly::layout(
-    #     yaxis = list(
-    #       title = "Count"
-    #     ),
-    #     xaxis = list(title = ""),
-    #     title = "Static Content Usage By Date",
-    #     barmode = "stack"
-    #   )
-    
     usage_by_date(usage_static(), time_col = time, type = "Static Content")
   })
   
   output$static_usage_by_user <- plotly::renderPlotly({
     req(usage_static())
-    
-    # usage_static() %>% 
-    #   dplyr::count(title, username, first_name, last_name) %>% 
-    #   plotly::plot_ly(
-    #     x = ~title,
-    #     y = ~n,
-    #     color = ~username,
-    #     type = "bar",
-    #     hoverinfo = "text",
-    #     text = ~glue::glue(
-    #       "<b>App Name</b>: {title}",
-    #       "<b>User</b>: {first_name} {ifelse(last_name == 'Anonymous', '', last_name)}", 
-    #       "<b>Count</b>: {n}",
-    #       .sep = "<br>"
-    #     )
-    #   ) %>% 
-    #   plotly::layout(
-    #     barmode = "stack",
-    #     xaxis = list(title = ""),
-    #     yaxis = list(title = "Count"),
-    #     title = "Static Content Usage By User"
-    #   )
     
     usage_by_user(usage_static(), type = "Static Content")
   })
