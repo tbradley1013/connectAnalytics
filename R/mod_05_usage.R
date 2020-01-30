@@ -112,35 +112,15 @@ mod_05_usage_server <- function(input, output, session, r){
   
   
   usage_shiny <- reactive({
-    req(r$shiny_usage)
+    req(r$shiny_usage, r$user_content, r$all_users)
     
-    r$shiny_usage %>% 
-      dplyr::left_join(
-        r$user_content[, c("guid", "owner_username", "title")],
-        by = c("content_guid" = "guid")
-      ) %>% 
-      dplyr::left_join(
-        r$all_users[, c("username", "first_name", "last_name", "guid")],
-        by = c("user_guid" = "guid")
-      ) %>% 
-      dplyr::mutate_at(dplyr::vars(username, first_name, last_name), list(~ifelse(is.na(.), "Anonymous", .))) %>% 
-      dplyr::mutate(title = ifelse(is.na(title), "Removed Content", title)) 
+    usage_info_join(r$shiny_usage, r$user_content, r$all_users)
   })
   
   usage_static <- reactive({
     req(r$static_usage)
     
-    r$static_usage %>% 
-      dplyr::left_join(
-        r$user_content[, c("guid", "owner_username", "title")],
-        by = c("content_guid" = "guid")
-      ) %>% 
-      dplyr::left_join(
-        r$all_users[, c("username", "first_name", "last_name", "guid")],
-        by = c("user_guid" = "guid")
-      ) %>% 
-      dplyr::mutate_at(dplyr::vars(username, first_name, last_name), list(~ifelse(is.na(.), "Anonymous", .))) %>% 
-      dplyr::mutate(title = ifelse(is.na(title), "Removed Content", title)) 
+    usage_info_join(r$static_usage, r$user_content, r$all_users)
   })
   
   output$shiny_usage_by_date <- plotly::renderPlotly({
