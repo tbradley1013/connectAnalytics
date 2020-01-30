@@ -1,5 +1,19 @@
 # Utility functions for the Usage module
 
+
+#' @title Create a interactive line graph showing Connect Usage
+#' @description create a interactive plotly graph showing the 
+#' daily usage trends for shiny application, static content, and 
+#' overall
+#' 
+#' @param shiny_usage a shiny_usage dataset from the 
+#' \link{\code{connectapi::get_usage_shiny}} function
+#' @param static_usage a data from the 
+#' \link{\code{connectapi::get_usage_static}} function
+#' @param from the start date of the interested query
+#' @param to the end data of the interested query
+#' 
+#' @return a plotly object
 overall_usage_line <- function(shiny_usage, static_usage, from, to, username, admin = FALSE){
   
   if (admin){
