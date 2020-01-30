@@ -131,3 +131,19 @@ overall_usage_line <- function(shiny_usage, static_usage, from, to, username, ad
   
   return(p)
 }
+
+usage_info_join <- function(usage, content, users){
+  out <- usage %>% 
+    dplyr::left_join(
+      content[, c("guid", "owner_username", "title")],
+      by = c("content_guid" = "guid")
+    ) %>% 
+    dplyr::left_join(
+      users[, c("username", "first_name", "last_name", "guid")],
+      by = c("user_guid" = "guid")
+    ) %>% 
+    dplyr::mutate_at(dplyr::vars(username, first_name, last_name), list(~ifelse(is.na(.), "Anonymous", .))) %>% 
+    dplyr::mutate(title = ifelse(is.na(title), "Removed Content", title)) 
+  
+  return(out)
+}
