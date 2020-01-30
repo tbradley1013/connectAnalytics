@@ -31,7 +31,7 @@ mod_06_admin_ui <- function(id){
           )
         ),
         fluidRow(
-          plotly::plotlyOutput("admin_line_graph")
+          plotly::plotlyOutput(ns("admin_line_graph"))
         )
       )
     )
