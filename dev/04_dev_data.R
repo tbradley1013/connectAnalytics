@@ -31,7 +31,7 @@ if (file.exists("dev/data/dev_users.rds")){
   readr::write_rds(dev_users, "dev/data/dev_users.rds")
 }
 
-shiny_usage_join <- usage_info_join(shiny_usage, dev_content, dev_users)
+shiny_usage_join <- usage_info_join(dev_shiny_usage, dev_content, dev_users)
 
 usage_continuous <- shiny_usage_join %>% 
   tidyr::pivot_longer(cols = c(started, ended), names_to = "name", values_to = "datetime", values_drop_na = TRUE) %>% 
