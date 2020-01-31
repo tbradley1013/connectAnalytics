@@ -16,54 +16,59 @@
 #' @keywords internal
 #' @export 
 #' @importFrom shiny NS tagList 
-mod_05_usage_ui <- function(id){
+mod_05_usage_ui <- function(id, admin = FALSE){
   ns <- NS(id)
-  tagList(
-    fluidRow(
-      div(
-        dateRangeInput(
-          inputId = ns("content_dates"),
-          label = "Select Date Range",
-          start = (Sys.Date() - lubridate::days(7)),
-          end = Sys.Date()
-        ),
-        style = "margin-left:20px"
-      )
-    ),
-    fluidRow(
-      plotly::plotlyOutput(ns("usage_line_graph"))
-    ),
-    fluidRow(
-      shinydashboard::tabBox(
-        title = "Shiny Usage",
-        tabPanel(
-          title = "By Date",
-          plotly::plotlyOutput(ns("shiny_usage_by_date")) 
-        ),
-        tabPanel(
-          title = "By User",
-          plotly::plotlyOutput(ns("shiny_usage_by_user"))
+  div_id <- ifelse(admin, "admin-tab", "content-tab")
+  out <- tagList(
+    div(
+      id = div_id,
+      fluidRow(
+        div(
+          dateRangeInput(
+            inputId = ns("content_dates"),
+            label = "Select Date Range",
+            start = (Sys.Date() - lubridate::days(7)),
+            end = Sys.Date()
+          ),
+          style = "margin-left:20px"
         )
-        
       ),
-      shinydashboard::tabBox(
-        title = "Static Usage",
-        tabPanel(
-          title = "By Date",
-          plotly::plotlyOutput(ns("static_usage_by_date"))
+      fluidRow(
+        plotly::plotlyOutput(ns("usage_line_graph"))
+      ),
+      fluidRow(
+        shinydashboard::tabBox(
+          title = "Shiny Usage",
+          tabPanel(
+            title = "By Date",
+            plotly::plotlyOutput(ns("shiny_usage_by_date")) 
+          ),
+          tabPanel(
+            title = "By User",
+            plotly::plotlyOutput(ns("shiny_usage_by_user"))
+          )
+          
         ),
-        tabPanel(
-          title = "By User",
-          plotly::plotlyOutput(ns("static_usage_by_user"))
+        shinydashboard::tabBox(
+          title = "Static Usage",
+          tabPanel(
+            title = "By Date",
+            plotly::plotlyOutput(ns("static_usage_by_date"))
+          ),
+          tabPanel(
+            title = "By User",
+            plotly::plotlyOutput(ns("static_usage_by_user"))
+          )
         )
       )
-      
     )
-    # fluidRow(
-    #   ,
-    #   
-    # )
   )
+  
+  if (admin){
+    out <- tagList(shinyjs::hidden(out))
+  }
+  
+  return(out)
 }
     
 # Module Server
@@ -72,7 +77,7 @@ mod_05_usage_ui <- function(id){
 #' @export
 #' @keywords internal
     
-mod_05_usage_server <- function(input, output, session, r){
+mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   ns <- session$ns
   
   observe({
