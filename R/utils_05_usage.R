@@ -133,7 +133,7 @@ usage_info_join <- function(usage, content, users){
 #' content
 #' 
 #' @param usage a usage tbl output from \code{usage_info_join}
-#' @param time_col the unqoued name of the time column that you wish to use 
+#' @param time_col the quoted name of the time column that you wish to use 
 #' to calculate the "date" used. For shiny usage either `started` or `ended` 
 #' could be used and for static content usage `time` should be used
 #' @type Either "Shiny App" or "Static Content". This string will determine
@@ -149,9 +149,8 @@ usage_info_join <- function(usage, content, users){
 #' The `usage_by_date` and `usage_by_user` functions use the above functions
 #' to create interactive visualizations for the count data
 usage_by_date_tbl <- function(usage, time_col){
-  usage %>% 
-    dplyr::mutate(date = lubridate::date({{time_col}})) %>% 
-    dplyr::count(date, title)
+  usage$date <- lubridate::date(usage[[time_col]])
+  dplyr::count(usage, date, title)
 }
 
 

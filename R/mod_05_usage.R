@@ -164,13 +164,13 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       content <- r$user_content
     }
     
-    usage_info_join(static_usage, user_content, r$all_users)
+    usage_info_join(static_usage, content, r$all_users)
   })
   
   output$shiny_usage_by_date <- plotly::renderPlotly({
     req(usage_shiny())
-    
-    usage_by_date(usage_shiny(), time_col = started, type = "Shiny App")
+    # browser()
+    usage_by_date(usage_shiny(), time_col = "started", type = "Shiny App")
     
   })
   
@@ -184,7 +184,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   output$static_usage_by_date <- plotly::renderPlotly({
     req(usage_static())
     
-    usage_by_date(usage_static(), time_col = time, type = "Static Content")
+    usage_by_date(usage_static(), time_col = "time", type = "Static Content")
   })
   
   output$static_usage_by_user <- plotly::renderPlotly({
