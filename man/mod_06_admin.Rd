@@ -5,7 +5,7 @@
 \alias{mod_06_admin_server}
 \title{mod_06_admin_ui and mod_06_admin_server}
 \usage{
-mod_06_admin_ui(id)
+mod_06_admin_ui(id, admin = FALSE)
 
 mod_06_admin_server(input, output, session, r)
 }

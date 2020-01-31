@@ -5,9 +5,9 @@
 \alias{mod_05_usage_server}
 \title{mod_05_usage_ui and mod_05_usage_server}
 \usage{
-mod_05_usage_ui(id)
+mod_05_usage_ui(id, admin = FALSE)
 
-mod_05_usage_server(input, output, session, r)
+mod_05_usage_server(input, output, session, r, admin = FALSE)
 }
 \arguments{
 \item{id}{shiny id}
