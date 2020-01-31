@@ -80,6 +80,20 @@ mod_05_usage_ui <- function(id, admin = FALSE){
 mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   ns <- session$ns
   
+  if (admin){
+    observe({
+      if (!r$admin){
+        shiny::hideTab(inputId = "navbar-tabs", target = "Admin")
+      }
+    })
+    
+    observe({
+      req(r$admin)
+      
+      shinyjs::show("admin-tab")
+    })
+  }
+  
   observe({
     req(r$client, r$user_content)
     # browser()
@@ -109,23 +123,48 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   })
   
   output$usage_line_graph <- plotly::renderPlotly({
-    req(r$shiny_usage, r$static_usage)
+    if (admin){
+      req(r$shiny_usage_all, r$static_usage_all, r$username, r$admin)
+      shiny_usage <- r$shiny_usage_all
+      static_usage <- r$static_usage_all
+    } else {
+      req(r$shiny_usage, r$static_usage, r$username)
+      shiny_usage <- r$shiny_usage
+      static_usage <- r$static_usage
+    }
     
     # This is defined in R/golem_utils_server.R
-    overall_usage_line(r$shiny_usage, r$static_usage, from = input$content_dates[1], to = input$content_dates[2], username = r$username, admin = FALSE)
+    overall_usage_line(shiny_usage, static_usage, from = input$content_dates[1], to = input$content_dates[2], username = r$username, admin = admin)
   })
   
   
   usage_shiny <- reactive({
-    req(r$shiny_usage, r$user_content, r$all_users)
+    if (admin){
+      req(r$shiny_usage_all, r$content, r$all_users, r$admin)
+      shiny_usage <- r$shiny_usage_all
+      content <- r$content
+    } else {
+      req(r$shiny_usage, r$user_content, r$all_users)
+      shiny_usage <- r$shiny_usage
+      content <- r$user_content
+    }
     
-    usage_info_join(r$shiny_usage, r$user_content, r$all_users)
+    
+    usage_info_join(shiny_usage, content, r$all_users)
   })
   
   usage_static <- reactive({
-    req(r$static_usage)
+    if (admin){
+      req(r$static_usage_all, r$content, r$all_users, r$admin)
+      static_usage <- r$static_usage_all
+      content <- r$content
+    } else {
+      req(r$static_usage, r$user_content, r$all_users)
+      static_usage <- r$static_usage
+      content <- r$user_content
+    }
     
-    usage_info_join(r$static_usage, r$user_content, r$all_users)
+    usage_info_join(static_usage, user_content, r$all_users)
   })
   
   output$shiny_usage_by_date <- plotly::renderPlotly({
