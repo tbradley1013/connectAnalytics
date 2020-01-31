@@ -33,6 +33,9 @@ if (file.exists("dev/data/dev_users.rds")){
 
 shiny_usage_join <- usage_info_join(dev_shiny_usage, dev_content, dev_users)
 
+shiny_usage_join %>% 
+  usage_by_date_tbl(time_col = started) 
+
 usage_continuous <- shiny_usage_join %>% 
   tidyr::pivot_longer(cols = c(started, ended), names_to = "name", values_to = "datetime", values_drop_na = TRUE) %>% 
   dplyr::arrange(datetime) %>% 
@@ -40,14 +43,15 @@ usage_continuous <- shiny_usage_join %>%
                 user_count = cumsum(user_count)) 
 
 
-usage_continuous %>% 
+p <- usage_continuous %>% 
   ggplot2::ggplot(ggplot2::aes(datetime, user_count)) + 
   ggplot2::geom_step() + 
-  ggplot2::theme_bw()
+  ggplot2::theme_bw() 
+
+plotly::ggplotly(p)
 
 
-
-tmp_time <- tibble(
+tmp_time <- tibble::tibble(
   datetime = seq.POSIXt(from = min(usage_continuous$datetime), to = max(usage_continuous$datetime), by = "min")
 )
 
@@ -68,9 +72,10 @@ tmp_time %>%
 
 
 tmp_time %>% 
-  dplyr::left_join(
+  dplyr::full_join(
     usage_continuous, by = "datetime"
   ) %>% 
+  dplyr::arrange(datetime) %>% 
   tidyr::fill(user_count, .direction = "down")  %>% 
   ggplot2::ggplot(ggplot2::aes(datetime, user_count)) + 
   ggplot2::geom_step() + 
