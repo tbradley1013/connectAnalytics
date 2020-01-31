@@ -30,7 +30,7 @@ ca_ui <- function() {
           tabPanel(
             title = "Admin",
             icon = icon("toolbox"),
-            mod_05_content_ui("05_usage_ui_2_admin", admin = TRUE) 
+            mod_05_usage_ui("05_usage_ui_2_admin", admin = TRUE) 
           ), 
           inputs = tagList(
             mod_01_server_connect_ui("01_server_connect_ui_1"),
