@@ -90,6 +90,28 @@ overall_usage_tbl <- function(shiny_usage, static_usage, from, to){
   return(out)
 }
 
+#' @title Join usage info with content and user info
+#' @description Join the three datasets (usage, content, and users) to return
+#' a single dataset that contains infomation about each of the apps that are 
+#' used on the Connect system
+#' 
+#' @param usage a usage data frame (shiny or static) with a content_guid and 
+#' user_guid column
+#' @param content a content dataframe that has information about each of the 
+#' pieces of content on the server. Must have columns: guid, owner_username, 
+#' and title
+#' @param users a users data frame that has information about the users on the 
+#' server. Must have columns: username, first_name, last_name, and guid
+#' 
+#' @return a single dataset that contains the information about each usage instance
+#' including what content it is, who owns the content and who used it
+#' @details 
+#' If the content GUID does in the usage dataset does not match any entries in the 
+#' content dataset than it will be marked as "Removed Content"
+#' 
+#' If the user GUID does not have a match or if it is NA to begin with than the 
+#' user of the content will be marked as "Anonymous"
+#' 
 usage_info_join <- function(usage, content, users){
   out <- usage %>% 
     dplyr::left_join(
