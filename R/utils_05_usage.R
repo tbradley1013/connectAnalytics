@@ -139,18 +139,23 @@ usage_info_join <- function(usage, content, users){
 #' @type Either "Shiny App" or "Static Content". This string will determine
 #' the title of the plot
 #' 
-#' @rdname usage_by_date
+#' @rdname usage_plots
+#' 
+#' @details 
+#' The `usage_by_date_tbl` and `usage_by_user_tbl` functions take a usage 
+#' dataframe output from \code{usage_info_join} and create counts of the 
+#' usage amounts by either date or user, respectively. 
+#' 
+#' The `usage_by_date` and `usage_by_user` functions use the above functions
+#' to create interactive visualizations for the count data
 usage_by_date_tbl <- function(usage, time_col){
   usage %>% 
     dplyr::mutate(date = lubridate::date({{time_col}})) %>% 
     dplyr::count(date, title)
 }
 
-#' @title Create a bar chart of usage by date
-#' @description Creates a stacked bar chart showing the amount of usage
-#' per day broken down by content name
-#' 
-#' @rdname usage_by_date
+
+#' @rdname usage_plots
 usage_by_date <- function(usage, time_col, type = "Shiny App"){
   
   type <- match.arg(type, c("Shiny App", "Static Content"))
@@ -181,10 +186,13 @@ usage_by_date <- function(usage, time_col, type = "Shiny App"){
     )
 }
 
+
+#' @rdname usage_plots
 usage_by_user_tbl <- function(usage){
   dplyr::count(usage, title, username, first_name, last_name) 
 }
 
+#' @rdname usage_plots
 usage_by_user <- function(usage, type = "Shiny App"){
   type <- match.arg(type, c("Shiny App", "Static Content"))
   
