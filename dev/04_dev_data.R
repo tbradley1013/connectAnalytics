@@ -7,7 +7,7 @@ if (file.exists("dev/data/dev_shiny_usage.rds")){
   dev_shiny_usage <- readr::read_rds("dev/data/dev_shiny_usage.rds")
 } else {
   dev_shiny_usage <- connectapi::get_usage_shiny(tmp, from = (Sys.Date() - lubridate::days(7)), asc_order = FALSE, limit = Inf)
-  readr::write_rds(shiny_usage, "dev/data/dev_shiny_usage.rds")
+  readr::write_rds(dev_shiny_usage, "dev/data/dev_shiny_usage.rds")
 }
 
 if (file.exists("dev/data/dev_static_usage.rds")){
@@ -31,7 +31,7 @@ if (file.exists("dev/data/dev_users.rds")){
   readr::write_rds(dev_users, "dev/data/dev_users.rds")
 }
 
-shiny_usage_join <- usage_info_join(shiny_usage, tmp_content, tmp_users)
+shiny_usage_join <- usage_info_join(shiny_usage, dev_content, dev_users)
 
 usage_continuous <- shiny_usage_join %>% 
   tidyr::pivot_longer(cols = c(started, ended), names_to = "name", values_to = "datetime", values_drop_na = TRUE) %>% 
