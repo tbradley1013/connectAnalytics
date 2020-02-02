@@ -14,7 +14,7 @@
 #' @param to the end data of the interested query
 #' 
 #' @return a plotly object
-overall_usage_line <- function(shiny_usage, static_usage, from, to, username, admin = FALSE){
+overall_usage_line <- function(usage_tbl, from, to, username, admin = FALSE){
   
   if (admin){
     title <- glue::glue("Overall Content Views for Entire Server ({format(from)} - {format(to)})")
@@ -22,7 +22,7 @@ overall_usage_line <- function(shiny_usage, static_usage, from, to, username, ad
     title <- glue::glue("Overall Content Usage for {username}'s Content ({format(from)} - {format(to)})")
   }
   
-  usage_tbl <- overall_usage_tbl(shiny_usage, static_usage, from, to)
+  # usage_tbl <- overall_usage_tbl(shiny_usage, static_usage, from, to)
   
   p <- plotly::plot_ly(
     usage_tbl,

@@ -106,9 +106,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   #   })
   # }
   
-
-  
-  output$usage_line_graph <- plotly::renderPlotly({
+  overall_usage <- reactive({
     if (admin){
       req(r$shiny_usage_all, r$static_usage_all, r$username, r$admin)
       shiny_usage <- r$shiny_usage_all
@@ -118,10 +116,31 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       shiny_usage <- r$shiny_usage
       static_usage <- r$static_usage
     }
+    
+    overall_usage_tbl(shiny_usage, static_usage, from = r$from, to = r$to)
+  })
+  
+  # usage_shared <- crosstalk::SharedData$new(overall_usage)
+  
+  output$usage_line_graph <- plotly::renderPlotly({
+    req(overall_usage())
 
     # This is defined in R/golem_utils_server.R
-    overall_usage_line(shiny_usage, static_usage, from = r$from, to = r$to, username = r$username, admin = admin)
+    overall_usage_line(overall_usage(), from = r$from, to = r$to, username = r$username, admin = admin)
   })
+  
+  # user_date_range <- reactive({
+  #   df <- usage_shared$data(withSelection = TRUE) %>%
+  #     dplyr::filter(selected_ | is.na(selected_))
+  #   
+  #   if (all(is.na(df$selected_))){
+  #     out <- list(from = r$from, to = r$to)
+  #   } else {
+  #     out <- list(from = min(df$date), to = max(r$date))
+  #   }
+  #   
+  #   return(out)
+  # })
 
 
   usage_shiny <- reactive({
@@ -134,6 +153,8 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       shiny_usage <- r$shiny_usage
       content <- r$user_content
     }
+    
+    # shiny_usage <- dplyr::filter(shiny_usage, started >= user_date_range()$from, started <= user_date_range()$to)
 
 
     usage_info_join(shiny_usage, content, r$all_users)
@@ -150,6 +171,8 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       content <- r$user_content
     }
 
+    # static_usage <- dplyr::filter(static_usage, time >= user_date_range()$from, time <= user_date_range()$to)
+    
     usage_info_join(static_usage, content, r$all_users)
   })
 
@@ -190,6 +213,9 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     
     usage_by_content(usage_static(), type = "Static Content")
   })
+  
+  
+  
 }
     
 ## To be copied in the UI

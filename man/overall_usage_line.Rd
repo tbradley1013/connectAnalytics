@@ -4,19 +4,18 @@
 \alias{overall_usage_line}
 \title{Create a interactive line graph showing Connect Usage}
 \usage{
-overall_usage_line(shiny_usage, static_usage, from, to, username,
-  admin = FALSE)
+overall_usage_line(usage_tbl, from, to, username, admin = FALSE)
 }
 \arguments{
+\item{from}{the start date of the interested query}
+
+\item{to}{the end data of the interested query}
+
 \item{shiny_usage}{a shiny_usage dataset from the 
 \link{\code{connectapi::get_usage_shiny}} function}
 
 \item{static_usage}{a data from the 
 \link{\code{connectapi::get_usage_static}} function}
-
-\item{from}{the start date of the interested query}
-
-\item{to}{the end data of the interested query}
 }
 \value{
 a plotly object
