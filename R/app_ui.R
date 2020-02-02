@@ -52,8 +52,13 @@ ca_ui <- function() {
               ),
               shinydashboard::menuItem(
                 "User",
-                tabName = "users"
-                # icon = icon("users")
+                tabName = "users",
+                icon = icon("users")
+              ),
+              shinydashboard::menuItem(
+                "Admin",
+                tabName = "admin",
+                icon = icon("users-cog")
               ),
               shinydashboard::menuItem(
                 "Change Inputs",
@@ -83,6 +88,10 @@ ca_ui <- function() {
               shinydashboard::tabItem(
                 tabName = "users",
                 mod_03_userinfo_ui("03_userinfo_ui_1")
+              ),
+              shinydashboard::tabItem(
+                tabName = "admin",
+                # mod_05_usage_ui("05_usage_ui_2_admin", admin = TRUE)
               )
             )
           )
