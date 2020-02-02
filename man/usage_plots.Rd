@@ -7,9 +7,9 @@
 \alias{usage_by_user}
 \title{Count usage by date and content}
 \usage{
-usage_by_date_tbl(usage, time_col)
+usage_by_date_tbl(usage, time_col, from, to)
 
-usage_by_date(usage, time_col, type = "Shiny App")
+usage_by_date(usage, time_col, from, to, type = "Shiny App")
 
 usage_by_user_tbl(usage)
 
