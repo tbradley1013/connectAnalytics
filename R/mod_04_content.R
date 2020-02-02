@@ -38,6 +38,34 @@ mod_04_content_server <- function(input, output, session, r){
       dplyr::filter(owner_username == r$username)
   })
   
+  observe({
+    req(r$client, r$user_content)
+    # browser()
+
+    r$shiny_usage_all <- connectapi::get_usage_shiny(
+      r$client,
+      # content_guid = r$user_content$guid,
+      from = r$from,
+      to = (r$to + lubridate::days(1)),
+      limit = Inf
+    )
+
+    r$static_usage_all <- connectapi::get_usage_static(
+      r$client,
+      # content_guid = r$user_content$guid,
+      from = r$from,
+      to = (r$to + lubridate::days(1)),
+      limit = Inf
+    )
+
+    r$shiny_usage <- r$shiny_usage_all %>%
+      dplyr::filter(content_guid %in% r$user_content$guid)
+
+    r$static_usage <- r$static_usage_all %>%
+      dplyr::filter(content_guid %in% r$user_content$guid)
+
+  })
+  
   
 }
     
