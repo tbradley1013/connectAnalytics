@@ -84,19 +84,19 @@ mod_05_usage_ui <- function(id, admin = FALSE){
 mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   ns <- session$ns
   
-  if (admin){
-    observe({
-      if (!r$admin){
-        shiny::hideTab(inputId = "navbar-tabs", target = "Admin")
-      }
-    })
-    
-    observe({
-      req(r$admin)
-      
-      shinyjs::show("admin-tab")
-    })
-  }
+  # if (admin){
+  #   observe({
+  #     if (!r$admin){
+  #       shiny::hideTab(inputId = "navbar-tabs", target = "Admin")
+  #     }
+  #   })
+  #   
+  #   observe({
+  #     req(r$admin)
+  #     
+  #     shinyjs::show("admin-tab")
+  #   })
+  # }
   
 
   

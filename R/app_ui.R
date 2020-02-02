@@ -91,7 +91,7 @@ ca_ui <- function() {
               ),
               shinydashboard::tabItem(
                 tabName = "admin",
-                # mod_05_usage_ui("05_usage_ui_2_admin", admin = TRUE)
+                mod_05_usage_ui("05_usage_ui_2_admin", admin = TRUE)
               )
             )
           )

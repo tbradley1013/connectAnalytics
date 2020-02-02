@@ -4,14 +4,8 @@
 \alias{overall_usage_line}
 \title{Create a interactive line graph showing Connect Usage}
 \usage{
-overall_usage_line(
-  shiny_usage,
-  static_usage,
-  from,
-  to,
-  username,
-  admin = FALSE
-)
+overall_usage_line(shiny_usage, static_usage, from, to, username,
+  admin = FALSE)
 }
 \arguments{
 \item{shiny_usage}{a shiny_usage dataset from the 
