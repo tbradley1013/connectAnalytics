@@ -148,18 +148,24 @@ usage_info_join <- function(usage, content, users){
 #' 
 #' The `usage_by_date` and `usage_by_user` functions use the above functions
 #' to create interactive visualizations for the count data
-usage_by_date_tbl <- function(usage, time_col){
+usage_by_date_tbl <- function(usage, time_col, from, to){
+  dates <- seq.Date(from, to, by = 1)
   usage$date <- lubridate::date(usage[[time_col]])
-  dplyr::count(usage, date, title)
+  usage$date <- factor(as.character(usage$date), levels = as.character(dates))
+  usage$title <- factor(usage$title, levels = unique(usage$title))
+  out <- dplyr::count(usage, date, title, .drop = FALSE)
+  
+  out$date <- as.Date(as.character(out$date))
+  return(out)
 }
 
 
 #' @rdname usage_plots
-usage_by_date <- function(usage, time_col, type = "Shiny App"){
+usage_by_date <- function(usage, time_col, from, to, type = "Shiny App"){
   
   type <- match.arg(type, c("Shiny App", "Static Content"))
   
-  usage_count <- usage_by_date_tbl(usage, time_col)
+  usage_count <- usage_by_date_tbl(usage, time_col, from, to)
   
   plotly::plot_ly(
     usage_count,
@@ -174,6 +180,7 @@ usage_by_date <- function(usage, time_col, type = "Shiny App"){
       "<b>Count</b>: {n}",
       .sep = "<br>"
     )
+    # width = 1
   ) %>% 
     plotly::layout(
       yaxis = list(
@@ -181,7 +188,8 @@ usage_by_date <- function(usage, time_col, type = "Shiny App"){
       ),
       xaxis = list(title = ""),
       title = glue::glue("{type} Usage By Date"),
-      barmode = "stack"
+      barmode = "stack",
+      width = 1
     )
 }
 
@@ -199,6 +207,35 @@ usage_by_user <- function(usage, type = "Shiny App"){
   
   plotly::plot_ly(
     usage_count,
+    x = ~username,
+    y = ~n,
+    color = ~title,
+    type = "bar",
+    hoverinfo = "text",
+    text = ~glue::glue(
+      "<b>App Name</b>: {title}",
+      "<b>User</b>: {first_name} {ifelse(last_name == 'Anonymous', '', last_name)}", 
+      "<b>Count</b>: {n}",
+      .sep = "<br>"
+    ),
+    width = 1
+  ) %>% 
+    plotly::layout(
+      barmode = "stack",
+      xaxis = list(title = ""),
+      yaxis = list(title = "Count"),
+      title = glue::glue("{type} Usage By User")
+    )
+}
+
+
+usage_by_content <- function(usage, type = "Shiny App"){
+  type <- match.arg(type, c("Shiny App", "Static Content"))
+  
+  usage_count <- usage_by_user_tbl(usage)
+  
+  plotly::plot_ly(
+    usage_count,
     x = ~title,
     y = ~n,
     color = ~username,
@@ -209,12 +246,13 @@ usage_by_user <- function(usage, type = "Shiny App"){
       "<b>User</b>: {first_name} {ifelse(last_name == 'Anonymous', '', last_name)}", 
       "<b>Count</b>: {n}",
       .sep = "<br>"
-    )
+    ),
+    width = 1
   ) %>% 
     plotly::layout(
       barmode = "stack",
       xaxis = list(title = ""),
       yaxis = list(title = "Count"),
-      title = glue::glue("{type} Usage By User")
+      title = glue::glue("{type} Usage By Content")
     )
 }

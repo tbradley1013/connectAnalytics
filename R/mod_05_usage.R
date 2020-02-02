@@ -50,6 +50,10 @@ mod_05_usage_ui <- function(id, admin = FALSE){
           tabPanel(
             title = "By User",
             plotly::plotlyOutput(ns("shiny_usage_by_user"))
+          ),
+          tabPanel(
+            title = "By Content",
+            plotly::plotlyOutput(ns("shiny_usage_by_content"))
           )
           
         ),
@@ -62,6 +66,10 @@ mod_05_usage_ui <- function(id, admin = FALSE){
           tabPanel(
             title = "By User",
             plotly::plotlyOutput(ns("static_usage_by_user"))
+          ),
+          tabPanel(
+            title = "By Content",
+            plotly::plotlyOutput(ns("static_usage_by_content"))
           )
         )
       )
@@ -148,7 +156,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   output$shiny_usage_by_date <- plotly::renderPlotly({
     req(usage_shiny())
     # browser()
-    usage_by_date(usage_shiny(), time_col = "started", type = "Shiny App")
+    usage_by_date(usage_shiny(), time_col = "started", from = r$from, to = r$to, type = "Shiny App")
 
   })
 
@@ -158,17 +166,29 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
 
     usage_by_user(usage_shiny(), type = "Shiny App")
   })
+  
+  output$shiny_usage_by_content <- plotly::renderPlotly({
+    req(usage_shiny())
+    
+    usage_by_content(usage_shiny(), type = "Shiny App")
+  })
 
   output$static_usage_by_date <- plotly::renderPlotly({
     req(usage_static())
 
-    usage_by_date(usage_static(), time_col = "time", type = "Static Content")
+    usage_by_date(usage_static(), time_col = "time", from = r$from, to = r$to, type = "Static Content")
   })
 
   output$static_usage_by_user <- plotly::renderPlotly({
     req(usage_static())
 
     usage_by_user(usage_static(), type = "Static Content")
+  })
+  
+  output$static_usage_by_content <- plotly::renderPlotly({
+    req(usage_static())
+    
+    usage_by_content(usage_static(), type = "Static Content")
   })
 }
     
