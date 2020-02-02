@@ -32,6 +32,7 @@ if (file.exists("dev/data/dev_users.rds")){
 }
 
 shiny_usage_join <- usage_info_join(dev_shiny_usage, dev_content, dev_users)
+static_usage_join <- usage_info_join(dev_static_usage, dev_content, dev_users)
 
 dev_from <- Sys.Date() - lubridate::days(7)
 dev_to <- Sys.Date()
@@ -52,6 +53,15 @@ p <- usage_continuous %>%
   ggplot2::theme_bw() 
 
 plotly::ggplotly(p)
+
+usage_continuous %>% 
+  plotly::plot_ly(
+    x = ~datetime,
+    y = ~user_count,
+    type = "scatter",
+    mode = "lines",
+    line = list(shape = "hv")
+  )
 
 
 tmp_time <- tibble::tibble(
