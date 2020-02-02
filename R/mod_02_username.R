@@ -17,12 +17,17 @@ mod_02_username_ui <- function(id){
   ns <- NS(id)
   tagList(
     shinyjs::hidden(
-      actionButton(
-        inputId = ns("change_username"),
-        label = "Change User",
-        class = "btn-success",
-        style = "position:relative;float:right;margin: 0 5px;"
-      )
+      # div(
+        actionButton(
+          inputId = ns("change_username"),
+          label = "Change User",
+          class = "btn-success",
+          style = "margin: 0 auto;",
+          width = "100px"
+        )
+        # style = "width:150px;margin: 0 auto"
+      # )
+      
     )
   )
 }
