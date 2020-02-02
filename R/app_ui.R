@@ -2,7 +2,7 @@
 ca_ui <- function() {
   tagList(
     # Leave this function for adding external resources
-    shinyjs::useShinyjs(),
+    # shinyjs::useShinyjs(),
     golem_add_external_resources(),
     div(
       id = "loading-content",
@@ -30,8 +30,8 @@ ca_ui <- function() {
         #   tabPanel(
         #     title = "Admin",
         #     icon = icon("toolbox"),
-        #     mod_05_usage_ui("05_usage_ui_2_admin", admin = TRUE) 
-        #   ), 
+        #     mod_05_usage_ui("05_usage_ui_2_admin", admin = TRUE)
+        #   ),
         #   inputs = tagList(
         #     mod_01_server_connect_ui("01_server_connect_ui_1"),
         #     mod_02_username_ui("02_username_ui_1")
@@ -39,31 +39,41 @@ ca_ui <- function() {
         # )
         shinydashboard::dashboardPage(
           title = "connectAnalytics",
-          skin = "black",
+          # skin = "black",
           shinydashboard::dashboardHeader(
-            
+            title = "connectAnalytics"
           ),
           shinydashboard::dashboardSidebar(
-            # shinydashboard::menuItem(
-            #   "Content",
-            #   tabName = "content",
-            #   icon = icon("dashboard")
-            # ),
-            shinydashboard::menuItem(
-              "User",
-              tabName = "users",
-              icon = icon("users")
+            shinydashboard::sidebarMenu(
+              shinydashboard::menuItem(
+                "Content",
+                tabName = "content",
+                icon = icon("dashboard")
+              ),
+              shinydashboard::menuItem(
+                "User",
+                tabName = "users"
+                # icon = icon("users")
+              ),
+              shinydashboard::menuItem(
+                "Change Inputs",
+                tabName = "change_inputs",
+                dateRangeInput(
+                  inputId = "content_dates",
+                  label = "Select Date Range",
+                  start = (Sys.Date() - lubridate::days(7)),
+                  end = Sys.Date()
+                ),
+                mod_01_server_connect_ui("01_server_connect_ui_1"),
+                mod_02_username_ui("02_username_ui_1")
+                # shinydashboard::menuItem(
+                #
+                # )
+              )
             )
-            # shinydashboard::menuItem(
-            #   "Change Inputs",
-            #   tabName = "change_inputs",
-            #   shinydashboard::menuItem(
-            #     mod_01_server_connect_ui("01_server_connect_ui_1"),
-            #     mod_02_username_ui("02_username_ui_1")
-            #   )
-            # )
           ),
           shinydashboard::dashboardBody(
+            shinyjs::useShinyjs(),
             shinydashboard::tabItems(
               shinydashboard::tabItem(
                 tabName = "content",
@@ -81,6 +91,35 @@ ca_ui <- function() {
     )
   )
 }
+
+# ca_ui <- function(){
+#   
+#     shinydashboard::dashboardPage(
+#       title = "connectAnaalytics",
+#       shinydashboard::dashboardHeader(
+#         title = "connectAnalytics"
+#       ),
+#       shinydashboard::dashboardSidebar(
+#         shinydashboard::sidebarMenu(
+#           shinydashboard::menuItem(
+#             "Content",
+#             tabName = "content",
+#             icon = icon("dashboard")
+#           ),
+#           shinydashboard::menuItem(
+#             "User",
+#             tabName = "users"
+#             # icon = icon("users")
+#           )
+#         )
+#         
+#       ),
+#       shinydashboard::dashboardBody(
+#         # shinyjs::useShinyjs()
+#       )
+#     )
+#   
+# }
 
 #' @import shiny
 golem_add_external_resources <- function(){

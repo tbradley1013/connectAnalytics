@@ -14,11 +14,11 @@ ca_server <- function(input, output,session) {
   
   callModule(mod_03_userinfo_server, "03_userinfo_ui_1", session = session, r = r)
   
-  # callModule(mod_04_content_server, "04_content_ui_1", session = session, r = r)
+  callModule(mod_04_content_server, "04_content_ui_1", session = session, r = r)
   
   callModule(mod_05_usage_server, "05_usage_ui_1", session = session, r = r, admin = FALSE)
   
-  callModule(mod_05_usage_server, "05_usage_ui_2_admin", session = session, r = r, admin = TRUE)
+  # callModule(mod_05_usage_server, "05_usage_ui_2_admin", session = session, r = r, admin = TRUE)
   
   observe({
     # req(r$shiny_usage, r$static_usage)
