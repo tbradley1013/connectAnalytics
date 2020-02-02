@@ -33,8 +33,11 @@ if (file.exists("dev/data/dev_users.rds")){
 
 shiny_usage_join <- usage_info_join(dev_shiny_usage, dev_content, dev_users)
 
+dev_from <- Sys.Date() - lubridate::days(7)
+dev_to <- Sys.Date()
+
 shiny_usage_join %>% 
-  usage_by_date_tbl(time_col = started) 
+  usage_by_date_tbl(time_col = "started", from = dev_from, to = dev_to) 
 
 usage_continuous <- shiny_usage_join %>% 
   tidyr::pivot_longer(cols = c(started, ended), names_to = "name", values_to = "datetime", values_drop_na = TRUE) %>% 
