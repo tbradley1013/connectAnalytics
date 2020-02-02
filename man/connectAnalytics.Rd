@@ -4,13 +4,9 @@
 \alias{connectAnalytics}
 \title{Run the Shiny Application}
 \usage{
-connectAnalytics(
-  ...,
-  host = Sys.getenv("RSTUDIO_CONNECT_SERVER"),
-  api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY"),
-  user = NULL,
-  switch_user = TRUE
-)
+connectAnalytics(..., host = Sys.getenv("RSTUDIO_CONNECT_SERVER"),
+  api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY"), user = NULL,
+  switch_user = TRUE)
 }
 \arguments{
 \item{host}{the host server for the RStudio Connect to be connected to. 

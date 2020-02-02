@@ -22,19 +22,23 @@ mod_05_usage_ui <- function(id, admin = FALSE){
   out <- tagList(
     div(
       id = div_id,
+      # fluidRow(
+      #   div(
+      #     dateRangeInput(
+      #       inputId = ns("content_dates"),
+      #       label = "Select Date Range",
+      #       start = (Sys.Date() - lubridate::days(7)),
+      #       end = Sys.Date()
+      #     ),
+      #     style = "margin-left:20px"
+      #   )
+      # ),
       fluidRow(
-        div(
-          dateRangeInput(
-            inputId = ns("content_dates"),
-            label = "Select Date Range",
-            start = (Sys.Date() - lubridate::days(7)),
-            end = Sys.Date()
-          ),
-          style = "margin-left:20px"
+        shinydashboard::box(
+          title = "Overall Content Usage",
+          plotly::plotlyOutput(ns("usage_line_graph")),
+          width = 12
         )
-      ),
-      fluidRow(
-        plotly::plotlyOutput(ns("usage_line_graph"))
       ),
       fluidRow(
         shinydashboard::tabBox(
@@ -46,6 +50,10 @@ mod_05_usage_ui <- function(id, admin = FALSE){
           tabPanel(
             title = "By User",
             plotly::plotlyOutput(ns("shiny_usage_by_user"))
+          ),
+          tabPanel(
+            title = "By Content",
+            plotly::plotlyOutput(ns("shiny_usage_by_content"))
           )
           
         ),
@@ -58,6 +66,10 @@ mod_05_usage_ui <- function(id, admin = FALSE){
           tabPanel(
             title = "By User",
             plotly::plotlyOutput(ns("static_usage_by_user"))
+          ),
+          tabPanel(
+            title = "By Content",
+            plotly::plotlyOutput(ns("static_usage_by_content"))
           )
         )
       )
@@ -65,7 +77,7 @@ mod_05_usage_ui <- function(id, admin = FALSE){
   )
   
   if (admin){
-    out <- tagList(shinyjs::hidden(out))
+    # out <- tagList(shinyjs::hidden(out))
   }
   
   return(out)
@@ -80,49 +92,21 @@ mod_05_usage_ui <- function(id, admin = FALSE){
 mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   ns <- session$ns
   
-  if (admin){
-    observe({
-      if (!r$admin){
-        shiny::hideTab(inputId = "navbar-tabs", target = "Admin")
-      }
-    })
-    
-    observe({
-      req(r$admin)
-      
-      shinyjs::show("admin-tab")
-    })
-  }
+  # if (admin){
+  #   observe({
+  #     if (!r$admin){
+  #       shiny::hideTab(inputId = "navbar-tabs", target = "Admin")
+  #     }
+  #   })
+  #   
+  #   observe({
+  #     req(r$admin)
+  #     
+  #     shinyjs::show("admin-tab")
+  #   })
+  # }
   
-  observe({
-    req(r$client, r$user_content)
-    # browser()
-    
-    r$shiny_usage_all <- connectapi::get_usage_shiny(
-      r$client, 
-      # content_guid = r$user_content$guid,
-      from = input$content_dates[1], 
-      to = (input$content_dates[2] + lubridate::days(1)),
-      limit = Inf
-    )
-    
-    r$static_usage_all <- connectapi::get_usage_static(
-      r$client, 
-      # content_guid = r$user_content$guid,
-      from = input$content_dates[1],
-      to = (input$content_dates[2] + lubridate::days(1)),
-      limit = Inf
-    )
-    
-    r$shiny_usage <- r$shiny_usage_all %>% 
-      dplyr::filter(content_guid %in% r$user_content$guid)
-    
-    r$static_usage <- r$static_usage_all %>% 
-      dplyr::filter(content_guid %in% r$user_content$guid)
-      
-  })
-  
-  output$usage_line_graph <- plotly::renderPlotly({
+  overall_usage <- reactive({
     if (admin){
       req(r$shiny_usage_all, r$static_usage_all, r$username, r$admin)
       shiny_usage <- r$shiny_usage_all
@@ -133,11 +117,32 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       static_usage <- r$static_usage
     }
     
-    # This is defined in R/golem_utils_server.R
-    overall_usage_line(shiny_usage, static_usage, from = input$content_dates[1], to = input$content_dates[2], username = r$username, admin = admin)
+    overall_usage_tbl(shiny_usage, static_usage, from = r$from, to = r$to)
   })
   
+  # usage_shared <- crosstalk::SharedData$new(overall_usage)
   
+  output$usage_line_graph <- plotly::renderPlotly({
+    req(overall_usage())
+
+    # This is defined in R/golem_utils_server.R
+    overall_usage_line(overall_usage(), from = r$from, to = r$to, username = r$username, admin = admin)
+  })
+  
+  # user_date_range <- reactive({
+  #   df <- usage_shared$data(withSelection = TRUE) %>%
+  #     dplyr::filter(selected_ | is.na(selected_))
+  #   
+  #   if (all(is.na(df$selected_))){
+  #     out <- list(from = r$from, to = r$to)
+  #   } else {
+  #     out <- list(from = min(df$date), to = max(r$date))
+  #   }
+  #   
+  #   return(out)
+  # })
+
+
   usage_shiny <- reactive({
     if (admin){
       req(r$shiny_usage_all, r$content, r$all_users, r$admin)
@@ -149,10 +154,12 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       content <- r$user_content
     }
     
-    
+    # shiny_usage <- dplyr::filter(shiny_usage, started >= user_date_range()$from, started <= user_date_range()$to)
+
+
     usage_info_join(shiny_usage, content, r$all_users)
   })
-  
+
   usage_static <- reactive({
     if (admin){
       req(r$static_usage_all, r$content, r$all_users, r$admin)
@@ -163,35 +170,52 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       static_usage <- r$static_usage
       content <- r$user_content
     }
+
+    # static_usage <- dplyr::filter(static_usage, time >= user_date_range()$from, time <= user_date_range()$to)
     
     usage_info_join(static_usage, content, r$all_users)
   })
-  
+
   output$shiny_usage_by_date <- plotly::renderPlotly({
     req(usage_shiny())
     # browser()
-    usage_by_date(usage_shiny(), time_col = "started", type = "Shiny App")
-    
+    usage_by_date(usage_shiny(), time_col = "started", from = r$from, to = r$to, type = "Shiny App")
+
   })
-  
-  
+
+
   output$shiny_usage_by_user <- plotly::renderPlotly({
     req(usage_shiny())
-    
+
     usage_by_user(usage_shiny(), type = "Shiny App")
   })
   
+  output$shiny_usage_by_content <- plotly::renderPlotly({
+    req(usage_shiny())
+    
+    usage_by_content(usage_shiny(), type = "Shiny App")
+  })
+
   output$static_usage_by_date <- plotly::renderPlotly({
     req(usage_static())
-    
-    usage_by_date(usage_static(), time_col = "time", type = "Static Content")
+
+    usage_by_date(usage_static(), time_col = "time", from = r$from, to = r$to, type = "Static Content")
   })
-  
+
   output$static_usage_by_user <- plotly::renderPlotly({
     req(usage_static())
-    
+
     usage_by_user(usage_static(), type = "Static Content")
   })
+  
+  output$static_usage_by_content <- plotly::renderPlotly({
+    req(usage_static())
+    
+    usage_by_content(usage_static(), type = "Static Content")
+  })
+  
+  
+  
 }
     
 ## To be copied in the UI
