@@ -65,7 +65,7 @@ mod_05_usage_ui <- function(id, admin = FALSE){
   )
   
   if (admin){
-    out <- tagList(shinyjs::hidden(out))
+    # out <- tagList(shinyjs::hidden(out))
   }
   
   return(out)
