@@ -7,9 +7,9 @@
 #' overall
 #' 
 #' @param shiny_usage a shiny_usage dataset from the 
-#' \link{\code{connectapi::get_usage_shiny}} function
+#' \code{connectapi::get_usage_shiny} function
 #' @param static_usage a data from the 
-#' \link{\code{connectapi::get_usage_static}} function
+#' \code{connectapi::get_usage_static} function
 #' @param from the start date of the interested query
 #' @param to the end data of the interested query
 #' 
@@ -55,9 +55,9 @@ overall_usage_line <- function(usage_tbl, from, to, username, admin = FALSE){
 #' of sessions each day for static and shiny applications and overall
 #' 
 #' @param shiny_usage a shiny_usage dataset from the 
-#' \link{\code{connectapi::get_usage_shiny}} function
+#' \code{connectapi::get_usage_shiny} function
 #' @param static_usage a data from the 
-#' \link{\code{connectapi::get_usage_static}} function
+#' \code{connectapi::get_usage_static} function
 #' @param from the start date of the interested query
 #' @param to the end data of the interested query
 #' 
@@ -139,7 +139,7 @@ usage_info_join <- function(usage, content, users){
 #' @param time_col the quoted name of the time column that you wish to use 
 #' to calculate the "date" used. For shiny usage either `started` or `ended` 
 #' could be used and for static content usage `time` should be used
-#' @type Either "Shiny App" or "Static Content". This string will determine
+#' @param type Either "Shiny App" or "Static Content". This string will determine
 #' the title of the plot
 #' 
 #' @rdname usage_plots
