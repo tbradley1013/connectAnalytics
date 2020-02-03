@@ -117,13 +117,25 @@ tmp_time %>%
 
 shiny_usage_join %>% 
   dplyr::mutate(content = title,
-                title = glue::glue("{title}", "User: {username}", "Started: {started}", "Ended: {ended}", .sep = "\n")) %>% 
+                id = paste0("shiny-", id),
+                title = glue::glue("{title}", "User: {username}", "Started: {format(started, '%b %d, %Y %H:%M:%S')}", "Ended: {format(ended, '%b %d, %Y %H:%M:%S')}", .sep = "\r\n\r\n")) %>% 
   dplyr::select(start = started, end = ended, content, title) %>% 
   dplyr::bind_rows({
     static_usage_join %>% 
       dplyr::mutate(content = title,
-                    title = glue::glue("{title}", "User: {username}", "Time: {time}", .sep = "\n")) %>% 
+                    id = paste0("static-", id),
+                    title = glue::glue("{title}", "User: {username}", "Time: {format(time, '%b %d, %Y %H:%M:%S')}", .sep = "\n")) %>% 
       dplyr::select(start = time, content, title)
   }) %>% 
-  timevis::timevis()
+  timevis::timevis(
+    options = list(
+      tooltip = list(
+        delay = 100
+        # template = htmlwidgets::JS("function(item, element, data) {
+        #    var my_html = data.content + '<br>Started: ' + data.start + '<br>Ended: ' + data.end;
+        #    return my_html;
+        # }")
+      )
+    )
+  )
   
