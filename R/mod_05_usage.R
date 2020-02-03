@@ -21,7 +21,7 @@ mod_05_usage_ui <- function(id, admin = FALSE){
   div_id <- ifelse(admin, "admin-tab", "content-tab")
   out <- tagList(
     div(
-      id = div_id,
+      id = ns(div_id),
       # fluidRow(
       #   div(
       #     dateRangeInput(
@@ -85,7 +85,16 @@ mod_05_usage_ui <- function(id, admin = FALSE){
   )
   
   if (admin){
-    # out <- tagList(shinyjs::hidden(out))
+    out <- tagList(
+      shinyjs::hidden(out), 
+      shinyjs::hidden(
+        div(
+          id = ns("admin-no-access"), 
+          h3("You do not have administrator access. Please contact your system admin if this is a mistake"), 
+          style = "color:red;width:500px;margin: 0 auto;"
+        )
+      )
+    )
   }
   
   return(out)
@@ -100,19 +109,30 @@ mod_05_usage_ui <- function(id, admin = FALSE){
 mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   ns <- session$ns
   
-  # if (admin){
-  #   observe({
-  #     if (!r$admin){
-  #       shiny::hideTab(inputId = "navbar-tabs", target = "Admin")
-  #     }
-  #   })
-  #   
-  #   observe({
-  #     req(r$admin)
-  #     
-  #     shinyjs::show("admin-tab")
-  #   })
-  # }
+  observe({
+    if (admin){
+      if (!r$admin){
+        shiny::hideTab(inputId = "navbar-tabs", target = "Admin")
+      }
+    }
+  }) 
+
+  observe({
+    # req(r$admin)
+    
+    if (admin){
+      if (r$admin) {
+        shinyjs::show("admin-tab")
+        shinyjs::hide("admin-no-access")
+      } else {
+        shinyjs::hide("admin-tab")
+        shinyjs::show("admin-no-access")
+      }
+      
+    }
+    
+  })
+  
   
   overall_usage <- reactive({
     if (admin){
