@@ -28,6 +28,7 @@ usethis::use_package("tidyr")
 usethis::use_package("tibble")
 usethis::use_package("ggplot2")
 usethis::use_package("forcats")
+usethis::use_pipe()
 usethis::use_tidy_eval()
 # usethis::use_package("thinkr") # To call each time you need a new package
 
