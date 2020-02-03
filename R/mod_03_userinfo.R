@@ -84,6 +84,7 @@ mod_03_userinfo_server <- function(input, output, session, r){
         last_name = reactable::colDef("Last Name"),
         user_role = reactable::colDef("User Role")
       ),
+      class = "users-table",
       details = function(index){
         user <- user_info()[index,]
         
@@ -105,11 +106,13 @@ mod_03_userinfo_server <- function(input, output, session, r){
     dat <- dplyr::filter(r$content, owner_username == r$username)
     
     reactable::reactable(
-      dat[, c("id", "name", "title", "url")],
+      dat[, c("id", "name", "title", "url", "created_time", "last_deployed_time")],
       columns = list(
         id = reactable::colDef("ID"),
         name = reactable::colDef("Name"),
         title = reactable::colDef("Title"),
+        created_time = reactable::colDef("Time Created", cell = function(value){format(value, "%b %d, %Y %H:%M")}),
+        last_deployed_time = reactable::colDef("Last Deployed", cell = function(value){format(value, "%b %d, %Y %H:%M")}),
         url = reactable::colDef(
           "URL", 
           cell = function(value){
@@ -117,8 +120,34 @@ mod_03_userinfo_server <- function(input, output, session, r){
           }
         )
       ),
+      class = "users-table",
       details = function(index){
+        usr_cont <- dat[index, ]
         
+        div(
+          class = "table-detail",
+          div(
+            class = "detail-header",
+            htmltools::tags$a(href = usr_cont$url, target = "_blank", usr_cont$title)
+          ),
+          div(class = "detail-description", usr_cont$description),
+          detail_field("Content GUID", usr_cont$guid),
+          detail_field("Access Type", usr_cont$access_type),
+          detail_field("Connection Timeout", usr_cont$connection_timeout),
+          detail_field("Read Timeout", usr_cont$read_timeout),
+          detail_feild("Initial Timeout", usr_cont$init_timeout),
+          detail_field("Idle Timeout", usr_cont$idle_timeout),
+          detail_field("Max Processes", usr_cont$max_processes),
+          detail_field("Min Processes", usr_cont$min_processes),
+          detail_field("Max Connections per Process", usr_cont$max_conns_per_process),
+          detail_field("Load Factor", usr_cont$load_factor),
+          detail_field("Content Category", usr_cont$content_category),
+          detail_field("R Version", usr_cont$r_version),
+          detail_field("Python Version", usr_cont$py_version),
+          detail_field("App Role", usr_cont$app_role),
+          detail_field("Is Scheduled?", usr_cont$is_scheduled),
+          detail_field("Has Parameters?", usr_cont$has_parameters)
+        )
       }
     )
   })

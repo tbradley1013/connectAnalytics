@@ -25,3 +25,43 @@
 .plotly {
   margin-top:10px;
 }
+
+.detail-header {
+  margin-bottom: 16px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.detail-title {
+  margin-left: 18px;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.detail-description {
+  font-size: 14px;
+}
+
+
+.users-table {
+  border: 1px solid hsl(213, 33%, 93%);
+  border-radius: 4px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.users-table .rt-th,
+.users-table .rt-td {
+  padding: 8px 12px !important;
+}
+
+.header {
+  background-color: hsl(213, 45%, 97%);
+  border-bottom-color: hsl(213, 33%, 93%);
+  border-bottom-width: 1px;
+  color: hsl(213, 13%, 33%);
+}
+
+.header[aria-sort]:hover {
+  color: hsl(213, 55%, 50%);
+}
