@@ -24,7 +24,8 @@ Imports:
     plotly,
     tidyr,
     tibble,
-    rlang (>= 0.1.2)
+    rlang (>= 0.1.2),
+    ggplot2
 RoxygenNote: 7.0.2
 URL: https://github.com/tbradley1013/connectAnalytics
 BugReports: https://github.com/tbradley1013/connectAnalytics/issues
