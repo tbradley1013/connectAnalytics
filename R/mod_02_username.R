@@ -22,7 +22,7 @@ mod_02_username_ui <- function(id){
           inputId = ns("change_username"),
           label = "Change User",
           class = "btn-success",
-          style = "margin: 0 auto;",
+          style = "margin: 5px auto;",
           width = "100px"
         )
         # style = "width:150px;margin: 0 auto"
