@@ -69,6 +69,12 @@ mod_05_usage_ui <- function(id, admin = FALSE){
         shinydashboard::box(
           plotly::plotlyOutput(ns("app_run_time"))
         )
+      ),
+      fluidRow(
+        shinydashboard::box(
+          timevis::timevisOutput(ns("time_vis_fig")),
+          width = 12
+        )
       )
     )
   )
@@ -278,7 +284,24 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       plotly::ggplotly()
   })
   
-  
+  output$time_vis_fig <- timevis::renderTimevis({
+    req(usage_shiny(), usage_static())
+    
+    usage_shiny() %>% 
+      dplyr::select(start = started, end = ended, content = title) %>% 
+      dplyr::bind_rows({
+        usage_static() %>% 
+          dplyr::select(start = time, content = title)
+      }) %>% 
+      timevis::timevis(
+        options = list(
+          start = r$from,
+          end = r$to,
+          orientation = "both",
+          selectable = "true"
+        )
+      )
+  })
   
   
 }
