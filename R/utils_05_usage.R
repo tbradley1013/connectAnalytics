@@ -188,8 +188,7 @@ usage_by_date <- function(usage, time_col, from, to, type = "Shiny App"){
       ),
       xaxis = list(title = ""),
       title = glue::glue("{type} Usage By Date"),
-      barmode = "stack",
-      width = 1
+      barmode = "stack"
     )
 }
 
@@ -219,8 +218,7 @@ usage_by_user <- function(usage, type = "Shiny App"){
       "<b>User</b>: {first_name} {ifelse(last_name == 'Anonymous', '', last_name)}", 
       "<b>Count</b>: {n}",
       .sep = "<br>"
-    ),
-    width = 1
+    )
   ) %>% 
     plotly::layout(
       barmode = "stack",
@@ -250,8 +248,7 @@ usage_by_content <- function(usage, type = "Shiny App"){
       "<b>User</b>: {first_name} {ifelse(last_name == 'Anonymous', '', last_name)}", 
       "<b>Count</b>: {n}",
       .sep = "<br>"
-    ),
-    width = 1
+    )
   ) %>% 
     plotly::layout(
       barmode = "stack",
