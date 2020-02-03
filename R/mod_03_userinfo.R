@@ -135,7 +135,7 @@ mod_03_userinfo_server <- function(input, output, session, r){
           detail_field("Access Type", usr_cont$access_type),
           detail_field("Connection Timeout", usr_cont$connection_timeout),
           detail_field("Read Timeout", usr_cont$read_timeout),
-          detail_feild("Initial Timeout", usr_cont$init_timeout),
+          detail_field("Initial Timeout", usr_cont$init_timeout),
           detail_field("Idle Timeout", usr_cont$idle_timeout),
           detail_field("Max Processes", usr_cont$max_processes),
           detail_field("Min Processes", usr_cont$min_processes),

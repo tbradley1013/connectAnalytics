@@ -55,13 +55,3 @@
   padding: 8px 12px !important;
 }
 
-.header {
-  background-color: hsl(213, 45%, 97%);
-  border-bottom-color: hsl(213, 33%, 93%);
-  border-bottom-width: 1px;
-  color: hsl(213, 13%, 33%);
-}
-
-.header[aria-sort]:hover {
-  color: hsl(213, 55%, 50%);
-}
