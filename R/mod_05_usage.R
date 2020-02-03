@@ -64,14 +64,17 @@ mod_05_usage_ui <- function(id, admin = FALSE){
       ),
       fluidRow(
         shinydashboard::box(
+          title = "Continuous App Usage",
           plotly::plotlyOutput(ns("app_user_count_cont"))
         ),
         shinydashboard::box(
+          title = "App Runtimes",
           plotly::plotlyOutput(ns("app_run_time"))
         )
       ),
       fluidRow(
         shinydashboard::box(
+          title = "Content Timeline",
           timevis::timevisOutput(ns("time_vis_fig")),
           width = 12
         )
