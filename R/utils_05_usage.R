@@ -123,7 +123,10 @@ usage_info_join <- function(usage, content, users){
       by = c("user_guid" = "guid")
     ) %>% 
     dplyr::mutate_at(dplyr::vars(username, first_name, last_name), list(~ifelse(is.na(.), "Anonymous", .))) %>% 
-    dplyr::mutate(title = ifelse(is.na(title), "Removed Content", title)) 
+    dplyr::mutate(
+      title = ifelse(is.na(title), "Removed Content", title),
+      id = dplyr::row_number()
+    ) 
   
   return(out)
 }
