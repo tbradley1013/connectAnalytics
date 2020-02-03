@@ -12,10 +12,10 @@ overall_usage_line(usage_tbl, from, to, username, admin = FALSE)
 \item{to}{the end data of the interested query}
 
 \item{shiny_usage}{a shiny_usage dataset from the 
-\link{\code{connectapi::get_usage_shiny}} function}
+\code{connectapi::get_usage_shiny} function}
 
 \item{static_usage}{a data from the 
-\link{\code{connectapi::get_usage_static}} function}
+\code{connectapi::get_usage_static} function}
 }
 \value{
 a plotly object

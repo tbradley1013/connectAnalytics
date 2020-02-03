@@ -8,10 +8,10 @@ overall_usage_tbl(shiny_usage, static_usage, from, to)
 }
 \arguments{
 \item{shiny_usage}{a shiny_usage dataset from the 
-\link{\code{connectapi::get_usage_shiny}} function}
+\code{connectapi::get_usage_shiny} function}
 
 \item{static_usage}{a data from the 
-\link{\code{connectapi::get_usage_static}} function}
+\code{connectapi::get_usage_static} function}
 
 \item{from}{the start date of the interested query}
 

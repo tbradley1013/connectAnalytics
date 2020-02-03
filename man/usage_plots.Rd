@@ -21,6 +21,9 @@ usage_by_user(usage, type = "Shiny App")
 \item{time_col}{the quoted name of the time column that you wish to use 
 to calculate the "date" used. For shiny usage either `started` or `ended` 
 could be used and for static content usage `time` should be used}
+
+\item{type}{Either "Shiny App" or "Static Content". This string will determine
+the title of the plot}
 }
 \description{
 Get a count of all of the usage each day for each piece of
