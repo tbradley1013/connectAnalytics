@@ -131,10 +131,6 @@ shiny_usage_join %>%
     options = list(
       tooltip = list(
         delay = 100
-        # template = htmlwidgets::JS("function(item, element, data) {
-        #    var my_html = data.content + '<br>Started: ' + data.start + '<br>Ended: ' + data.end;
-        #    return my_html;
-        # }")
       )
     )
   )
