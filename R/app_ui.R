@@ -69,14 +69,10 @@ ca_ui <- function() {
                   start = (Sys.Date() - lubridate::days(7)),
                   end = Sys.Date()
                 ),
-                br(),
+                # br(),
                 mod_02_username_ui("02_username_ui_1"),
-                br(),
+                # br(),
                 mod_01_server_connect_ui("01_server_connect_ui_1")
-                
-                # shinydashboard::menuItem(
-                #
-                # )
               )
             )
           ),
@@ -151,5 +147,6 @@ golem_add_external_resources <- function(){
     #tags$link(rel="stylesheet", type="text/css", href="www/custom.css")
     tags$link(rel="stylesheet", type="text/css", href="www/styles.css"),
     tags$script(src = "www/button_click.js")
+    # tags$script(HTML("$('main-header').addClass('fixed');"))
   )
 }

@@ -55,3 +55,19 @@
   padding: 8px 12px !important;
 }
 
+.sidebar {
+  color: #FFF;
+  position: fixed;
+  width: 220px;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.main-header {
+  position: fixed;
+  width:100%;
+}
+
+.sidebar-menu {
+  width:100%;
+}
