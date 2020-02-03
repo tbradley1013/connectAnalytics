@@ -298,7 +298,10 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
           start = r$from,
           end = r$to,
           orientation = "both",
-          selectable = "true"
+          selectable = "true",
+          tooltip = list(
+            delay = 100
+          )
         )
       )
   })
