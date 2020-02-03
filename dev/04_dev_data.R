@@ -52,6 +52,25 @@ p <- usage_continuous %>%
   ggplot2::geom_step() + 
   ggplot2::theme_bw() 
 
+shiny_usage_join %>% 
+  dplyr::mutate(app_time = difftime(ended, started, units = "mins")) %>%
+  dplyr::mutate(
+    title = factor(title, levels = unique(title)),
+    title = forcats::fct_reorder(title, app_time, .fun = mean),
+    app_time = round(as.numeric(app_time), 2)
+  ) %>% 
+  {ggplot2::ggplot(., ggplot2::aes(x = title, y = app_time)) + 
+  ggplot2::geom_boxplot(outlier.shape = NA) +
+  # ggplot2::geom_jitter() + 
+  ggplot2::coord_flip() +
+  ggplot2::labs(
+    x = "",
+    y = "Appliation Run Time (minutes)",
+    title = "Distribution of Application Run Time"
+  ) +
+  ggplot2::theme_bw() } %>% 
+  plotly::ggplotly()
+
 plotly::ggplotly(p)
 
 usage_continuous %>% 

@@ -205,6 +205,8 @@ usage_by_user <- function(usage, type = "Shiny App"){
   
   usage_count <- usage_by_user_tbl(usage)
   
+  usage_count$username <- forcats::fct_reorder(usage_count$username, usage_count$n, .fun = sum)
+  
   plotly::plot_ly(
     usage_count,
     x = ~username,
@@ -233,6 +235,8 @@ usage_by_content <- function(usage, type = "Shiny App"){
   type <- match.arg(type, c("Shiny App", "Static Content"))
   
   usage_count <- usage_by_user_tbl(usage)
+  
+  usage_count$title <- forcats::fct_reorder(usage_count$title, usage_count$n, .fun = sum)
   
   plotly::plot_ly(
     usage_count,

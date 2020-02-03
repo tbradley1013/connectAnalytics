@@ -72,6 +72,14 @@ mod_05_usage_ui <- function(id, admin = FALSE){
             plotly::plotlyOutput(ns("static_usage_by_content"))
           )
         )
+      ),
+      fluidRow(
+        shinydashboard::box(
+          plotly::plotlyOutput(ns("app_user_count_cont"))
+        ),
+        shinydashboard::box(
+          plotly::plotlyOutput(ns("app_run_time"))
+        )
       )
     )
   )
@@ -213,6 +221,52 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     
     usage_by_content(usage_static(), type = "Static Content")
   })
+  
+  output$app_user_count_cont <- plotly::renderPlotly({
+    req(usage_shiny())
+    
+    usage_shiny() %>% 
+      tidyr::pivot_longer(cols = c(started, ended), names_to = "name", values_to = "datetime", values_drop_na = TRUE) %>% 
+      dplyr::arrange(datetime) %>% 
+      dplyr::mutate(user_count = ifelse(name == "started", 1, -1), 
+                    user_count = cumsum(user_count)) %>% 
+      { ggplot2::ggplot(., ggplot2::aes(datetime, user_count)) + 
+        ggplot2::geom_step() + 
+          ggplot2::labs(
+            y = "User Count",
+            title = "Continuous Shiny User Count"
+          ) +
+         ggplot2::theme_bw() + 
+        ggplot2::theme(
+          axis.title.x = ggplot2::element_blank()
+        )} %>% 
+      plotly::ggplotly()
+    
+  })
+  
+  output$app_run_time <- plotly::renderPlotly({
+    req(usage_shiny())
+    
+    usage_shiny() %>% 
+      dplyr::mutate(app_time = difftime(ended, started, units = "mins")) %>%
+      dplyr::mutate(
+        title = factor(title, levels = unique(title)),
+        title = forcats::fct_reorder(title, app_time, .fun = mean),
+        app_time = round(as.numeric(app_time), 2)
+      ) %>% 
+      {ggplot2::ggplot(., ggplot2::aes(x = title, y = app_time)) + 
+          ggplot2::geom_boxplot(outlier.shape = NA) +
+          # ggplot2::geom_jitter() + 
+          ggplot2::coord_flip() +
+          ggplot2::labs(
+            x = "",
+            y = "Appliation Run Time (minutes)",
+            title = "Distribution of Application Run Time"
+          ) +
+          ggplot2::theme_bw() } %>% 
+      plotly::ggplotly()
+  })
+  
   
   
   
