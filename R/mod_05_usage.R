@@ -22,17 +22,6 @@ mod_05_usage_ui <- function(id, admin = FALSE){
   out <- tagList(
     div(
       id = ns(div_id),
-      # fluidRow(
-      #   div(
-      #     dateRangeInput(
-      #       inputId = ns("content_dates"),
-      #       label = "Select Date Range",
-      #       start = (Sys.Date() - lubridate::days(7)),
-      #       end = Sys.Date()
-      #     ),
-      #     style = "margin-left:20px"
-      #   )
-      # ),
       fluidRow(
         shinydashboard::box(
           title = "Overall Content Usage",
@@ -249,9 +238,11 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       tidyr::pivot_longer(cols = c(started, ended), names_to = "name", values_to = "datetime", values_drop_na = TRUE) %>% 
       dplyr::arrange(datetime) %>% 
       dplyr::mutate(user_count = ifelse(name == "started", 1, -1), 
-                    user_count = cumsum(user_count)) %>% 
+                    user_count = cumsum(user_count),
+                    text = glue::glue("Datetime: {format(datetime, '%b %d, %Y %H:%M:%S')}<br>User Count: {user_count}")) %>% 
       { ggplot2::ggplot(., ggplot2::aes(datetime, user_count)) + 
-        ggplot2::geom_step() + 
+        ggplot2::geom_step() +
+          ggplot2::geom_point(ggplot2::aes(text = text), size = 0.01) +
           ggplot2::labs(
             y = "User Count",
             title = "Continuous Shiny User Count"
@@ -260,7 +251,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
         ggplot2::theme(
           axis.title.x = ggplot2::element_blank()
         )} %>% 
-      plotly::ggplotly()
+      plotly::ggplotly(tooltip = "text")
     
   })
   
