@@ -112,3 +112,18 @@ tmp_time %>%
   ggplot2::ggplot(ggplot2::aes(datetime, user_count)) + 
   ggplot2::geom_step() + 
   ggplot2::theme_bw()
+
+
+
+shiny_usage_join %>% 
+  dplyr::mutate(content = title,
+                title = glue::glue("{title}", "User: {username}", "Started: {started}", "Ended: {ended}", .sep = "\n")) %>% 
+  dplyr::select(start = started, end = ended, content, title) %>% 
+  dplyr::bind_rows({
+    static_usage_join %>% 
+      dplyr::mutate(content = title,
+                    title = glue::glue("{title}", "User: {username}", "Time: {time}", .sep = "\n")) %>% 
+      dplyr::select(start = time, content, title)
+  }) %>% 
+  timevis::timevis()
+  
