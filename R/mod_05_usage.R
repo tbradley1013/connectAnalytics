@@ -291,10 +291,16 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     req(usage_shiny(), usage_static())
     
     usage_shiny() %>% 
-      dplyr::select(start = started, end = ended, content = title) %>% 
+      dplyr::mutate(content = title,
+                    id = paste0("shiny-", id),
+                    title = glue::glue("{title}", "User: {username}", "Started: {format(started, '%b %d, %Y %H:%M:%S')}", "Ended: {format(ended, '%b %d, %Y %H:%M:%S')}", .sep = "\n")) %>% 
+      dplyr::select(start = started, end = ended, content, title) %>% 
       dplyr::bind_rows({
         usage_static() %>% 
-          dplyr::select(start = time, content = title)
+          dplyr::mutate(content = title,
+                        id = paste0("static-", id),
+                        title = glue::glue("{title}", "User: {username}", "Time: {format(time, '%b %d, %Y %H:%M:%S')}", .sep = "\n")) %>% 
+          dplyr::select(start = time, content, title)
       }) %>% 
       timevis::timevis(
         options = list(
