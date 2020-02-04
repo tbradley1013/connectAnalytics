@@ -61,6 +61,7 @@
   width: 220px;
   white-space: nowrap;
   overflow: visible;
+  height:100%;
 }
 
 .main-header {
@@ -70,6 +71,7 @@
 
 .sidebar-menu {
   width:100%;
+  height:100%;
 }
 
 .content {
