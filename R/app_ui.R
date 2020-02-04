@@ -41,24 +41,8 @@ ca_ui <- function() {
                 start = (Sys.Date() - lubridate::days(7)),
                 end = Sys.Date()
               ),
-              # br(),
               mod_02_username_ui("02_username_ui_1"),
-              # br(),
               mod_01_server_connect_ui("01_server_connect_ui_1")
-              # shinydashboard::menuItem(
-              #   "Change Inputs",
-              #   tabName = "change_inputs",
-              #   dateRangeInput(
-              #     inputId = "content_dates",
-              #     label = "Select Date Range",
-              #     start = (Sys.Date() - lubridate::days(7)),
-              #     end = Sys.Date()
-              #   ),
-              #   # br(),
-              #   mod_02_username_ui("02_username_ui_1"),
-              #   # br(),
-              #   mod_01_server_connect_ui("01_server_connect_ui_1")
-              # )
             )
           ),
           shinydashboard::dashboardBody(
