@@ -43,11 +43,12 @@ mod_02_username_ui <- function(id){
 mod_02_username_server <- function(input, output, session, r){
   ns <- session$ns
   
-  observe({
-    if (golem::get_golem_options("switch_user")){
-      shinyjs::show("username-div")
-    }
-  })
+  # observe({
+  #   req(!is.null(input$username))
+  #   if (golem::get_golem_options("switch_user")){
+  #     shinyjs::show("username-div")
+  #   }
+  # })
   
   # ask for username input if user is null
   dialog <- reactive({
@@ -103,10 +104,15 @@ mod_02_username_server <- function(input, output, session, r){
     )
   })
   
-  
+  outputOptions(output, "username_ui", suspendWhenHidden = FALSE)
   
   observe({
     req(r$username, !is.null(input$username))
+    
+    if (golem::get_golem_options("switch_user")){
+      shinyjs::show("username-div")
+    }
+    
     if (input$username == "" | input$username == r$username){
       shinyjs::disable("change_username")
     } else {
