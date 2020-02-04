@@ -17,17 +17,14 @@ mod_02_username_ui <- function(id){
   ns <- NS(id)
   tagList(
     shinyjs::hidden(
-      # div(
-        actionButton(
-          inputId = ns("change_username"),
-          label = "Change User",
-          class = "btn-success",
-          style = "margin: 5px auto;",
-          width = "100px"
-        )
-        # style = "width:150px;margin: 0 auto"
-      # )
-      
+      uiOutput(ns("username_ui")),
+      actionButton(
+        inputId = ns("change_username"),
+        label = "Change User",
+        class = "btn-success",
+        style = "margin: 5px auto;",
+        width = "100px"
+      )
     )
   )
 }
@@ -47,10 +44,11 @@ mod_02_username_server <- function(input, output, session, r){
     }
   })
   
+  # ask for username input if user is null
   dialog <- reactive({
     dialog <- modalDialog(
       textInput(
-        inputId = ns("username"),
+        inputId = ns("username_mod"),
         label = "Username",
         value = (r$username %||% "")
       ),
@@ -74,12 +72,8 @@ mod_02_username_server <- function(input, output, session, r){
     }
   })
   
-  observeEvent(input$change_username, {
-    showModal(dialog())
-  })
-  
   observe({
-    req(!is.null(input$username))
+    req(!is.null(input$username_mod))
     
     if (input$username == ""){
       shinyjs::disable("submit")
@@ -89,10 +83,38 @@ mod_02_username_server <- function(input, output, session, r){
   })
   
   observeEvent(input$submit, {
-    r$username <- input$username
+    r$username <- input$username_mod
     
     removeModal()
   })
+  
+  
+  # Allowing the user to change the username if the app is set to allow it
+  output$username_ui <- renderUI({
+    textInput(
+      inputId = ns("username"),
+      label = "Username",
+      value = (r$username %||% "")
+    )
+  })
+  
+  
+  
+  observe({
+    req(r$username, !is.null(input$username))
+    if (input$username == "" | input$username == r$username){
+      shinyjs::disable("change_username")
+    } else {
+      shinyjs::enable("change_username")
+    }
+  })
+  
+  observeEvent(input$change_username, {
+    req(r$username)
+    r$username <- input$username
+  })
+  
+  
 }
     
 ## To be copied in the UI
