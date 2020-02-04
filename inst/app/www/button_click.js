@@ -6,7 +6,14 @@ $(document).keyup(function(event) {
 
 
 $(document).keyup(function(event) {
-  if ($("#02_username_ui_1-username").is(":focus") && (event.key == "Enter")) {
+  if ($("#02_username_ui_1-username_mod").is(":focus") && (event.key == "Enter")) {
     $("#02_username_ui_1-submit").click();
+  }
+});
+
+
+$(document).keyup(function(event) {
+  if ($("#02_username_ui_1-username").is(":focus") && (event.key == "Enter")) {
+    $("#02_username_ui_1-change_username").click();
   }
 });
