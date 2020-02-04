@@ -17,13 +17,18 @@ mod_02_username_ui <- function(id){
   ns <- NS(id)
   tagList(
     shinyjs::hidden(
-      uiOutput(ns("username_ui")),
-      actionButton(
-        inputId = ns("change_username"),
-        label = "Change User",
-        class = "btn-success",
-        style = "margin: 5px auto;",
-        width = "100px"
+      div(
+        id = ns("username-div"),
+        uiOutput(ns("username_ui")),
+        shinyjs::disabled(
+          actionButton(
+            inputId = ns("change_username"),
+            label = "Change User",
+            class = "btn-success",
+            style = "margin: 5px auto;",
+            width = "100px"
+          )
+        )
       )
     )
   )
@@ -40,7 +45,7 @@ mod_02_username_server <- function(input, output, session, r){
   
   observe({
     if (golem::get_golem_options("switch_user")){
-      shinyjs::show("change_username")
+      shinyjs::show("username-div")
     }
   })
   
@@ -75,7 +80,7 @@ mod_02_username_server <- function(input, output, session, r){
   observe({
     req(!is.null(input$username_mod))
     
-    if (input$username == ""){
+    if (input$username_mod == ""){
       shinyjs::disable("submit")
     } else {
       shinyjs::enable("submit")
