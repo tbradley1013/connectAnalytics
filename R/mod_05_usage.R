@@ -43,7 +43,8 @@ mod_05_usage_ui <- function(id, admin = FALSE){
           tabPanel(
             title = "By Content",
             plotly::plotlyOutput(ns("shiny_usage_by_content"))
-          )
+          ),
+          uiOutput(ns("shiny_usage_by_owner_ui"))
           
         ),
         shinydashboard::tabBox(
@@ -221,6 +222,31 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     
     usage_by_content(usage_shiny(), type = "Shiny App")
   })
+  
+  output$shiny_usage_by_owner <- plotly::renderPlotly({
+    req(usage_shiny())
+    
+    if (!admin) return(NULL)
+    usage_by_owner(usage_shiny(), type = "Shiny App")
+  })
+  
+  output$shiny_usage_by_owner_ui <- renderUI({
+    if (!admin) return(NULL)
+    
+    tagList(
+      tabPanel(
+        title = "By Publisher",
+        plotly::plotlyOutput(ns("shiny_usage_by_owner"))
+      )
+    )
+    
+  })
+  
+  outputOptions(output, "shiny_usage_by_date", suspendWhenHidden = FALSE)
+  outputOptions(output, "shiny_usage_by_content", suspendWhenHidden = FALSE)
+  outputOptions(output, "shiny_usage_by_user", suspendWhenHidden = FALSE)
+  outputOptions(output, "shiny_usage_by_owner", suspendWhenHidden = FALSE)
+  outputOptions(output, "shiny_usage_by_owner_ui", suspendWhenHidden = FALSE)
 
   output$static_usage_by_date <- plotly::renderPlotly({
     req(usage_static())
@@ -239,6 +265,31 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     
     usage_by_content(usage_static(), type = "Static Content")
   })
+  
+  output$static_usage_by_owner <- plotly::renderPlotly({
+    req(usage_static())
+    
+    if (!admin) return(NULL)
+    usage_by_owner(usage_static(), type = "Static Content")
+  })
+  
+  output$static_usage_by_owner_ui <- renderUI({
+    if (!admin) return(NULL)
+    
+    tagList(
+      tabPanel(
+        title = "By Publisher",
+        plotly::plotlyOutput(ns("static_usage_by_owner"))
+      )
+    )
+    
+  })
+  
+  outputOptions(output, "static_usage_by_date", suspendWhenHidden = FALSE)
+  outputOptions(output, "static_usage_by_content", suspendWhenHidden = FALSE)
+  outputOptions(output, "static_usage_by_user", suspendWhenHidden = FALSE)
+  outputOptions(output, "static_usage_by_owner", suspendWhenHidden = FALSE)
+  outputOptions(output, "static_usage_by_owner_ui", suspendWhenHidden = FALSE)
   
   output$app_user_count_cont <- plotly::renderPlotly({
     req(usage_shiny())
@@ -314,6 +365,10 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
         )
       )
   })
+  
+  outputOptions(output, "app_user_count_cont", suspendWhenHidden = FALSE)
+  outputOptions(output, "app_run_time", suspendWhenHidden = FALSE)
+  outputOptions(output, "time_vis_fig", suspendWhenHidden = FALSE)
   
   
 }

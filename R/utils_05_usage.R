@@ -260,3 +260,38 @@ usage_by_content <- function(usage, type = "Shiny App"){
       title = glue::glue("{type} Usage By Content")
     )
 }
+
+
+#' Count by owner
+#' 
+#' @param usage a usage dataset
+usage_by_owner_tbl <- function(usage){
+  dplyr::count(usage, owner_username)
+}
+
+usage_by_owner <- function(usage, type = "Shiny App"){
+  type <- match.arg(type, c("Shiny App", "Static Content"))
+  
+  usage_count <- usage_by_owner_tbl(usage)
+  
+  usage_count$owner_username <- forcats::fct_rev(forcats::fct_reorder(usage_count$owner_username, usage_count$n))
+  
+  plotly::plot_ly(
+    usage_count,
+    x = ~owner_username,
+    y = ~n,
+    type = "bar",
+    hoverinfo = "text",
+    text = ~glue::glue(
+      "<b>App Owner</b>: {owner_username}",
+      "<b>Count</b>: {n}",
+      .sep = "<br>"
+    )
+  ) %>% 
+    plotly::layout(
+      barmode = "stack",
+      xaxis = list(title = ""),
+      yaxis = list(title = "Count"),
+      title = glue::glue("{type} Usage By Content")
+    )
+}
