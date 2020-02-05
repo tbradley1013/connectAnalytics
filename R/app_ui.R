@@ -13,10 +13,10 @@ ca_ui <- function() {
       div(
         id = "app-content",
         shinydashboard::dashboardPage(
-          title = "connectAnalytics",
+          title = (golem::get_golem_options("window_title") %||% golem::get_golem_options("title")),
           # skin = "black",
           shinydashboard::dashboardHeader(
-            title = "connectAnalytics"
+            title = golem::get_golem_options("title")
           ),
           shinydashboard::dashboardSidebar(
             shinydashboard::sidebarMenu(
@@ -69,47 +69,28 @@ ca_ui <- function() {
   )
 }
 
-# ca_ui <- function(){
-#   
-#     shinydashboard::dashboardPage(
-#       title = "connectAnaalytics",
-#       shinydashboard::dashboardHeader(
-#         title = "connectAnalytics"
-#       ),
-#       shinydashboard::dashboardSidebar(
-#         shinydashboard::sidebarMenu(
-#           shinydashboard::menuItem(
-#             "Content",
-#             tabName = "content",
-#             icon = icon("dashboard")
-#           ),
-#           shinydashboard::menuItem(
-#             "User",
-#             tabName = "users"
-#             # icon = icon("users")
-#           )
-#         )
-#         
-#       ),
-#       shinydashboard::dashboardBody(
-#         # shinyjs::useShinyjs()
-#       )
-#     )
-#   
-# }
-
 #' @import shiny
 golem_add_external_resources <- function(){
   
   addResourcePath(
     'www', system.file('app/www', package = 'connectAnalytics')
   )
+  
+  fav <- golem::get_golem_options("favicon")
+  
+  if (!is.null(fav)){
+    addResourcePath(
+      "fav", dirname(normalizePath(fav))
+    )
+    
+    fav_ico <- file.path("fav", basename(fav))
+  } else fav_ico <- "www/favicon.ico"
+  # fav_ico <- ifelse(is.null(fav), "www/favicon.ico", normalizePath(fav))
  
   tags$head(
     golem::activate_js(),
-    golem::favicon(),
-    # shiny::includeScript("button_click.js"),
-    # shiny::includeCSS("/www/styles.css")
+    # shiny::HTML(glue::glue('<link rel="icon", type="image/x-icon" href="{fav_ico}" />')),
+    tags$link(rel = "icon", type = "image/x-icon", href = fav_ico),
     # Add here all the external resources
     # If you have a custom.css in the inst/app/www
     # Or for example, you can add shinyalert::useShinyalert() here
