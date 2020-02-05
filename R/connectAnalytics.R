@@ -21,9 +21,3 @@ connectAnalytics <- function(..., host = Sys.getenv("RSTUDIO_CONNECT_SERVER"),
   )
 }
 
-
-tmp_fn <- function(host = "test", ...){
-  return(
-    list(host = host, ...)
-  )
-}
