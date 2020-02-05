@@ -60,7 +60,8 @@ mod_05_usage_ui <- function(id, admin = FALSE){
           tabPanel(
             title = "By Content",
             plotly::plotlyOutput(ns("static_usage_by_content"))
-          )
+          ),
+          uiOutput(ns("static_usage_by_owner_ui"))
         )
       ),
       fluidRow(
@@ -226,12 +227,12 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   output$shiny_usage_by_owner <- plotly::renderPlotly({
     req(usage_shiny())
     
-    if (!admin) return(NULL)
+    # if (!admin) return(NULL)
     usage_by_owner(usage_shiny(), type = "Shiny App")
   })
   
   output$shiny_usage_by_owner_ui <- renderUI({
-    if (!admin) return(NULL)
+    # if (!admin) return(NULL)
     
     tagList(
       tabPanel(
@@ -269,12 +270,12 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   output$static_usage_by_owner <- plotly::renderPlotly({
     req(usage_static())
     
-    if (!admin) return(NULL)
+    # if (!admin) return(NULL)
     usage_by_owner(usage_static(), type = "Static Content")
   })
   
   output$static_usage_by_owner_ui <- renderUI({
-    if (!admin) return(NULL)
+    # if (!admin) return(NULL)
     
     tagList(
       tabPanel(
