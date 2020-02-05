@@ -9,15 +9,21 @@
 #' allow users to switch which connect user analytics data they are looking at. 
 #' This could be useful if your company wants to allow users to see how others are
 #' performing. 
+#' @param favicon path to a favicon icon to be used for your application
+#' @param title the title of the application to be shown in the dashboard header
+#' @param window_title the title of the application to be shown in the browser tab. 
+#' If NULL (default) the title value will be used
 #' @export
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
 connectAnalytics <- function(..., host = Sys.getenv("RSTUDIO_CONNECT_SERVER"), 
                              api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY"),
-                             user = NULL, switch_user = TRUE) {
+                             user = NULL, switch_user = TRUE, favicon = NULL,
+                             title = "connectAnalytics", window_title = NULL) {
   golem::with_golem_options(
     app = shiny::shinyApp(ui = ca_ui, server = ca_server), 
-    golem_opts = list(host = host, api_key = api_key, user = user, switch_user = switch_user, ...)
+    golem_opts = list(host = host, api_key = api_key, user = user, switch_user = switch_user, favicon = favicon,
+                      title = title, window_title = window_title, ...)
   )
 }
 
