@@ -9,6 +9,4 @@ golem::detach_all_attached()
 golem::document_and_reload()
 
 # Run the application
-connectAnalytics::connectAnalytics(user = "tbradley", switch_user = TRUE)
-
-
+connectAnalytics::connectAnalytics(switch_user = TRUE)

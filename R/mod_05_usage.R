@@ -127,6 +127,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   ns <- session$ns
   
   observe({
+    req(r$admin)
     if (admin){
       if (!r$admin){
         shiny::hideTab(inputId = "navbar-tabs", target = "Admin")
@@ -135,7 +136,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   }) 
 
   observe({
-    # req(r$admin)
+    req(r$admin)
     
     if (admin){
       if (r$admin) {

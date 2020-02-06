@@ -41,10 +41,13 @@ mod_03_userinfo_ui <- function(id){
 mod_03_userinfo_server <- function(input, output, session, r){
   ns <- session$ns
   
-  output$user_name <- renderText(paste("User:", r$username))
+  output$user_name <- renderText({
+    req(r$username)
+    paste("User:", r$username)
+  })
   
   user_info <- reactive({
-    req(r$client)
+    req(r$client, r$username)
     
     all_users <- connectapi::get_users(r$client, page_size = Inf)
     

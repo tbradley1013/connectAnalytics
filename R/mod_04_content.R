@@ -30,7 +30,7 @@ mod_04_content_server <- function(input, output, session, r){
   ns <- session$ns
   
   observe({
-    req(r$client)
+    req(r$client, r$username)
     
     r$content <- connectapi::get_content(r$client, limit = Inf)
     
@@ -39,7 +39,7 @@ mod_04_content_server <- function(input, output, session, r){
   })
   
   observe({
-    req(r$client, r$user_content)
+    req(r$client, r$user_content, r$username)
     # browser()
 
     r$shiny_usage_all <- connectapi::get_usage_shiny(
