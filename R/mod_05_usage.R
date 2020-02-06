@@ -288,7 +288,6 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   outputOptions(output, "static_usage_by_content", suspendWhenHidden = FALSE)
   outputOptions(output, "static_usage_by_user", suspendWhenHidden = FALSE)
   outputOptions(output, "static_usage_by_owner", suspendWhenHidden = FALSE)
-  # outputOptions(output, "static_usage_by_owner_ui", suspendWhenHidden = FALSE)
   
   output$app_user_count_cont <- plotly::renderPlotly({
     req(usage_shiny())
