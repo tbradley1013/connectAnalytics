@@ -5,6 +5,9 @@
 \alias{usage_by_date}
 \alias{usage_by_user_tbl}
 \alias{usage_by_user}
+\alias{usage_by_content}
+\alias{usage_by_owner_tbl}
+\alias{usage_by_owner}
 \title{Count usage by date and content}
 \usage{
 usage_by_date_tbl(usage, time_col, from, to)
@@ -14,6 +17,12 @@ usage_by_date(usage, time_col, from, to, type = "Shiny App")
 usage_by_user_tbl(usage)
 
 usage_by_user(usage, type = "Shiny App")
+
+usage_by_content(usage, type = "Shiny App")
+
+usage_by_owner_tbl(usage)
+
+usage_by_owner(usage, type = "Shiny App")
 }
 \arguments{
 \item{usage}{a usage tbl output from \code{usage_info_join}}
