@@ -150,7 +150,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     
   })
   
-  
+  # usage data is initially queried in the mod_04_content.R module
   overall_usage <- reactive({
     if (admin){
       req(r$shiny_usage_all, r$static_usage_all, r$username, r$admin)
