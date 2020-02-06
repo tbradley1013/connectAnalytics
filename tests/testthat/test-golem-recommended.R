@@ -3,12 +3,12 @@ context("golem tests")
 library(golem)
 
 test_that("app ui", {
-  ui <- app_ui()
+  ui <- ca_ui()
   expect_shinytaglist(ui)
 })
 
 test_that("app server", {
-  server <- app_server
+  server <- ca_server
   expect_is(server, "function")
 })
 
