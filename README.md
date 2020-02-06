@@ -88,7 +88,7 @@ organization:
     future)
   - `title` - The title for your dashboard header. Defaults to
     `connectAnalytics`
-  - `windowTitle` - The title to be displayed in the browser tab for
+  - `window_title` - The title to be displayed in the browser tab for
     your app. Defaults to the same value as the `title` argument
 
 ## Deployment

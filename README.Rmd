@@ -61,7 +61,7 @@ There are several arguments that can be specified when running this app that can
   * `switch_user` - `TRUE` or `FALSE`; Allows the user to specify different user names within the app to see usage information for other users. This feature could be userful for managers or supervisors who are not admins on the server but would like to be able to see how the content the people under them have deployed is being used. 
   * `favicon` - The path to a favicon icon to be used by your app. If `NULL` then the `golem` favicon is used (this may be changed in the future)
   * `title` - The title for your dashboard header. Defaults to `connectAnalytics`
-  * `windowTitle` - The title to be displayed in the browser tab for your app. Defaults to the same value as the `title` argument
+  * `window_title` - The title to be displayed in the browser tab for your app. Defaults to the same value as the `title` argument
 
 
 
