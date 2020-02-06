@@ -7,15 +7,16 @@
 overall_usage_line(usage_tbl, from, to, username, admin = FALSE)
 }
 \arguments{
+\item{usage_tbl}{A tibble output from \code{overall_usage_tbl}
+\code{connectapi::get_usage_static} function}
+
 \item{from}{the start date of the interested query}
 
 \item{to}{the end data of the interested query}
 
-\item{shiny_usage}{a shiny_usage dataset from the 
-\code{connectapi::get_usage_shiny} function}
+\item{username}{the username to put in the graph title}
 
-\item{static_usage}{a data from the 
-\code{connectapi::get_usage_static} function}
+\item{admin}{whether this is for the admin section}
 }
 \value{
 a plotly object
@@ -24,4 +25,7 @@ a plotly object
 create a interactive plotly graph showing the 
 daily usage trends for shiny application, static content, and 
 overall
+}
+\details{
+The username and admin arguments only impact the plot title
 }

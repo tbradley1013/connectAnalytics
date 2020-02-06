@@ -31,6 +31,10 @@ usage_by_owner(usage, type = "Shiny App")
 to calculate the "date" used. For shiny usage either `started` or `ended` 
 could be used and for static content usage `time` should be used}
 
+\item{from}{the start date of the graph}
+
+\item{to}{the end date of the graph}
+
 \item{type}{Either "Shiny App" or "Static Content". This string will determine
 the title of the plot}
 }

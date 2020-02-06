@@ -17,6 +17,8 @@ connectAnalytics(
 )
 }
 \arguments{
+\item{...}{additional options to be passed to `golem_opts`}
+
 \item{host}{the host server for the RStudio Connect to be connected to. 
 Defaults to the environment variable "RSTUDIO_CONNECT_SERVER"}
 

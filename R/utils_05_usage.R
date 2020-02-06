@@ -6,12 +6,15 @@
 #' daily usage trends for shiny application, static content, and 
 #' overall
 #' 
-#' @param shiny_usage a shiny_usage dataset from the 
-#' \code{connectapi::get_usage_shiny} function
-#' @param static_usage a data from the 
+#' @param usage_tbl A tibble output from \code{overall_usage_tbl}
 #' \code{connectapi::get_usage_static} function
 #' @param from the start date of the interested query
 #' @param to the end data of the interested query
+#' @param username the username to put in the graph title
+#' @param admin whether this is for the admin section 
+#' 
+#' @details 
+#' The username and admin arguments only impact the plot title
 #' 
 #' @return a plotly object
 overall_usage_line <- function(usage_tbl, from, to, username, admin = FALSE){
@@ -141,6 +144,8 @@ usage_info_join <- function(usage, content, users){
 #' could be used and for static content usage `time` should be used
 #' @param type Either "Shiny App" or "Static Content". This string will determine
 #' the title of the plot
+#' @param from the start date of the graph
+#' @param to the end date of the graph
 #' 
 #' @rdname usage_plots
 #' 

@@ -15,9 +15,12 @@
 #' If NULL (default) the title value will be used
 #' @param header_width Set the width of the header for the shiny application. This is
 #' useful in case the title specified is too long for the default width
+#' @param ... additional options to be passed to `golem_opts`
 #' @export
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
+#' @importFrom graphics text title
+#' @importFrom stats time
 connectAnalytics <- function(..., host = Sys.getenv("RSTUDIO_CONNECT_SERVER"), 
                              api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY"),
                              user = NULL, switch_user = TRUE, favicon = NULL,
