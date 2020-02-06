@@ -12,7 +12,8 @@ connectAnalytics(
   switch_user = TRUE,
   favicon = NULL,
   title = "connectAnalytics",
-  window_title = NULL
+  window_title = NULL,
+  header_width = 250
 )
 }
 \arguments{
