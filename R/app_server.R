@@ -29,6 +29,7 @@ ca_server <- function(input, output,session) {
   
   observe({
     # req(r$shiny_usage, r$static_usage)
+    req(r$username, r$shiny_usage, r$static_usage)
     
     shinyjs::show("app-content")
     shinyjs::hide("loading-content")
