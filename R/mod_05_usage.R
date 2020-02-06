@@ -299,42 +299,46 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       dplyr::mutate(user_count = ifelse(name == "started", 1, -1), 
                     user_count = cumsum(user_count),
                     text = glue::glue("Datetime: {format(datetime, '%b %d, %Y %H:%M:%S')}<br>User Count: {user_count}")) %>% 
-      { ggplot2::ggplot(., ggplot2::aes(datetime, user_count)) + 
-        ggplot2::geom_step() +
-          ggplot2::geom_point(ggplot2::aes(text = text), size = 0.01) +
-          ggplot2::labs(
-            y = "User Count",
-            title = "Continuous Shiny User Count"
-          ) +
-         ggplot2::theme_bw() + 
-        ggplot2::theme(
-          axis.title.x = ggplot2::element_blank()
-        )} %>% 
-      plotly::ggplotly(tooltip = "text")
+      plotly::plot_ly(
+        x = ~datetime,
+        y = ~user_count,
+        hoverinfo = "text",
+        text = ~text,
+        type = "scatter",
+        mode = "lines",
+        line = list(shape = "hv")
+      ) %>% 
+      plotly::layout(
+        yaxis = list(title = "User Count"),
+        xaxis = list(title = ""),
+        title = "Continuous Shiny User Count"
+      )
     
   })
   
   output$app_run_time <- plotly::renderPlotly({
     req(usage_shiny())
     
-    usage_shiny() %>% 
+    app_run_time_tbl <- usage_shiny() %>% 
       dplyr::mutate(app_time = difftime(ended, started, units = "mins")) %>%
       dplyr::mutate(
         title = factor(title, levels = unique(title)),
         title = forcats::fct_reorder(title, app_time, .fun = mean),
         app_time = round(as.numeric(app_time), 2)
+      ) 
+    
+    app_run_time_tbl %>% 
+      plotly::plot_ly(
+        x = ~app_time,
+        y = ~title,
+        type = "box"
       ) %>% 
-      {ggplot2::ggplot(., ggplot2::aes(x = title, y = app_time)) + 
-          ggplot2::geom_boxplot(outlier.shape = NA) +
-          # ggplot2::geom_jitter() + 
-          ggplot2::coord_flip() +
-          ggplot2::labs(
-            x = "",
-            y = "Appliation Run Time (minutes)",
-            title = "Distribution of Application Run Time"
-          ) +
-          ggplot2::theme_bw() } %>% 
-      plotly::ggplotly()
+      plotly::layout(
+        yaxis = list(title = ""),
+        xaxis = list(title = "Application Run Time (minutes)", 
+                     range = c(-2, max(app_run_time_tbl$app_time) + 10)),
+        title = "Distribution of Application Run Time"
+      )
   })
   
   output$time_vis_fig <- timevis::renderTimevis({
