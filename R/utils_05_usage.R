@@ -231,7 +231,7 @@ usage_by_user <- function(usage, type = "Shiny App"){
     )
 }
 
-
+#' @rdname usage_plots
 usage_by_content <- function(usage, type = "Shiny App"){
   type <- match.arg(type, c("Shiny App", "Static Content"))
   
@@ -262,13 +262,12 @@ usage_by_content <- function(usage, type = "Shiny App"){
 }
 
 
-#' Count by owner
-#' 
-#' @param usage a usage dataset
+#' @rdname usage_plots
 usage_by_owner_tbl <- function(usage){
   dplyr::count(usage, owner_username)
 }
 
+#' @rdname usage_plots
 usage_by_owner <- function(usage, type = "Shiny App"){
   type <- match.arg(type, c("Shiny App", "Static Content"))
   
