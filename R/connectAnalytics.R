@@ -13,6 +13,8 @@
 #' @param title the title of the application to be shown in the dashboard header
 #' @param window_title the title of the application to be shown in the browser tab. 
 #' If NULL (default) the title value will be used
+#' @param header_width Set the width of the header for the shiny application. This is
+#' useful in case the title specified is too long for the default width
 #' @export
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
@@ -20,7 +22,7 @@ connectAnalytics <- function(..., host = Sys.getenv("RSTUDIO_CONNECT_SERVER"),
                              api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY"),
                              user = NULL, switch_user = TRUE, favicon = NULL,
                              title = "connectAnalytics", window_title = NULL, 
-                             header_width = 250) {
+                             header_width = 230) {
   golem::with_golem_options(
     app = shiny::shinyApp(ui = ca_ui, server = ca_server), 
     golem_opts = list(host = host, api_key = api_key, user = user, switch_user = switch_user, favicon = favicon,
