@@ -13,7 +13,7 @@ connectAnalytics(
   favicon = NULL,
   title = "connectAnalytics",
   window_title = NULL,
-  header_width = 250
+  header_width = 230
 )
 }
 \arguments{
@@ -36,6 +36,9 @@ performing.}
 
 \item{window_title}{the title of the application to be shown in the browser tab. 
 If NULL (default) the title value will be used}
+
+\item{header_width}{Set the width of the header for the shiny application. This is
+useful in case the title specified is too long for the default width}
 }
 \description{
 Run the Shiny Application
