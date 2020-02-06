@@ -19,11 +19,12 @@
 connectAnalytics <- function(..., host = Sys.getenv("RSTUDIO_CONNECT_SERVER"), 
                              api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY"),
                              user = NULL, switch_user = TRUE, favicon = NULL,
-                             title = "connectAnalytics", window_title = NULL) {
+                             title = "connectAnalytics", window_title = NULL, 
+                             header_width = 250) {
   golem::with_golem_options(
     app = shiny::shinyApp(ui = ca_ui, server = ca_server), 
     golem_opts = list(host = host, api_key = api_key, user = user, switch_user = switch_user, favicon = favicon,
-                      title = title, window_title = window_title, ...)
+                      title = title, window_title = window_title, header_width = header_width, ...)
   )
 }
 

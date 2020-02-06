@@ -2,6 +2,13 @@
 ca_server <- function(input, output,session) {
   session$onSessionEnded(stopApp)
   
+  observe({
+    width <- golem::get_golem_options("header_width")
+    width <- as.character(width)
+    session$sendCustomMessage("widthHandler", width)
+  })
+  
+  
   r <- shiny::reactiveValues(
     connect_server = golem::get_golem_options("host"),
     api_key = golem::get_golem_options("api_key"),
