@@ -36,12 +36,12 @@ your organization, there are a few things that you need to do:
 
 2.  Configure the following environment variables:
     
-      - `RSTUDIO_CONNECT_SERVER` - This variable should be the url of
-        your connect server that you use to reach the base content page.
+      - `CONNECT_SERVER` - This variable should be the url of your
+        connect server that you use to reach the base content page.
         **NOTE:** If your server’s port is masked then you will need to
         add the actual port to the server URL
-      - `RSTUDIO_CONNECT_API_KEY` - An API key generated from the
-        Connect system. You can see how to generate an API key
+      - `CONNECT_API_KEY` - An API key generated from the Connect
+        system. You can see how to generate an API key
         [here](https://docs.rstudio.com/connect/user/api-keys.html)
 
 3.  Install the `connectAnalytics` package as shown above
@@ -72,10 +72,10 @@ There are several arguments that can be specified when running this app
 that can help the user customize the app to themselves or their
 organization:
 
-  - `host` - If specified would override the `RSTUDIO_CONNECT_SERVER`
+  - `host` - If specified would override the `CONNECT_SERVER`
     environment variable
-  - `api_key` - If specified would override the
-    `RSTUDIO_CONNECT_API_KEY` environment variable
+  - `api_key` - If specified would override the `CONNECT_API_KEY`
+    environment variable
   - `user` - The RStudio Connect User name to run the application as
   - `switch_user` - `TRUE` or `FALSE`; Allows the user to specify
     different user names within the app to see usage information for

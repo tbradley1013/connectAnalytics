@@ -1,8 +1,9 @@
 #' Run the Shiny Application
 #'
 #' @param host the host server for the RStudio Connect to be connected to. 
-#' Defaults to the environment variable "RSTUDIO_CONNECT_SERVER"
-#' @param api_key a valid RStudio Connect API key 
+#' Defaults to the environment variable "CONNECT_SERVER"
+#' @param api_key a valid RStudio Connect API key. Defaults to the environment
+#' variable "CONNECT_API_KEY"
 #' @param user the desired user to log in as. If NULL (default) it will default
 #' to the session$user (recommended)
 #' @param switch_user logical; if TRUE a button appears in the navbar that will 
@@ -21,8 +22,8 @@
 #' @importFrom golem with_golem_options
 #' @importFrom graphics text title
 #' @importFrom stats time
-connectAnalytics <- function(..., host = Sys.getenv("RSTUDIO_CONNECT_SERVER"), 
-                             api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY"),
+connectAnalytics <- function(..., host = Sys.getenv("CONNECT_SERVER"), 
+                             api_key = Sys.getenv("CONNECT_API_KEY"),
                              user = NULL, switch_user = TRUE, favicon = NULL,
                              title = "connectAnalytics", window_title = NULL, 
                              header_width = 230) {

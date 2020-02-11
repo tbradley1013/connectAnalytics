@@ -6,8 +6,8 @@
 \usage{
 connectAnalytics(
   ...,
-  host = Sys.getenv("RSTUDIO_CONNECT_SERVER"),
-  api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY"),
+  host = Sys.getenv("CONNECT_SERVER"),
+  api_key = Sys.getenv("CONNECT_API_KEY"),
   user = NULL,
   switch_user = TRUE,
   favicon = NULL,
@@ -20,9 +20,10 @@ connectAnalytics(
 \item{...}{additional options to be passed to `golem_opts`}
 
 \item{host}{the host server for the RStudio Connect to be connected to. 
-Defaults to the environment variable "RSTUDIO_CONNECT_SERVER"}
+Defaults to the environment variable "CONNECT_SERVER"}
 
-\item{api_key}{a valid RStudio Connect API key}
+\item{api_key}{a valid RStudio Connect API key. Defaults to the environment
+variable "CONNECT_API_KEY"}
 
 \item{user}{the desired user to log in as. If NULL (default) it will default
 to the session$user (recommended)}

@@ -37,8 +37,8 @@ Before you can get started using the `connectAnalytics` dashboard for your organ
   1. Have access to an [RStudio Connect](https://rstudio.com/products/connect/) instance as either a [Publisher or Administrator](http://pwdrstudio.water.gov/rsconnect/__docs__/admin/user-management.html#user-roles)
   2. Configure the following environment variables:
   
-      * `RSTUDIO_CONNECT_SERVER` - This variable should be the url of your connect server that you use to reach the base content page. **NOTE:** If your server's port is masked then you will need to add the actual port to the server URL
-      * `RSTUDIO_CONNECT_API_KEY` - An API key generated from the Connect system. You can see how to generate an API key [here](https://docs.rstudio.com/connect/user/api-keys.html)
+      * `CONNECT_SERVER` - This variable should be the url of your connect server that you use to reach the base content page. **NOTE:** If your server's port is masked then you will need to add the actual port to the server URL
+      * `CONNECT_API_KEY` - An API key generated from the Connect system. You can see how to generate an API key [here](https://docs.rstudio.com/connect/user/api-keys.html)
       
   3. Install the `connectAnalytics` package as shown above
   
@@ -55,8 +55,8 @@ If you run it wittout specifying any arguments than it will automatically look f
 
 There are several arguments that can be specified when running this app that can help the user customize the app to themselves or their organization:
 
-  * `host` - If specified would override the `RSTUDIO_CONNECT_SERVER` environment variable
-  * `api_key` - If specified would override the `RSTUDIO_CONNECT_API_KEY` environment variable
+  * `host` - If specified would override the `CONNECT_SERVER` environment variable
+  * `api_key` - If specified would override the `CONNECT_API_KEY` environment variable
   * `user` - The RStudio Connect User name to run the application as
   * `switch_user` - `TRUE` or `FALSE`; Allows the user to specify different user names within the app to see usage information for other users. This feature could be userful for managers or supervisors who are not admins on the server but would like to be able to see how the content the people under them have deployed is being used. 
   * `favicon` - The path to a favicon icon to be used by your app. If `NULL` then the `golem` favicon is used (this may be changed in the future)

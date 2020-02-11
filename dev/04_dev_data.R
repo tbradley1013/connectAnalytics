@@ -1,6 +1,6 @@
 
 
-tmp <- connectapi::connect(host = Sys.getenv("RSTUDIO_CONNECT_SERVER"), api_key = Sys.getenv("RSTUDIO_CONNECT_API_KEY"))
+tmp <- connectapi::connect(host = Sys.getenv("CONNECT_SERVER"), api_key = Sys.getenv("CONNECT_API_KEY"))
 
 
 if (file.exists("dev/data/dev_shiny_usage.rds")){
