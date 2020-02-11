@@ -23,7 +23,7 @@ Imports:
     dplyr,
     lubridate,
     plotly,
-    tidyr,
+    tidyr (>= 1.0.0),
     tibble,
     rlang (>= 0.1.2),
     ggplot2,
