@@ -39,6 +39,7 @@ mod_05_usage_ui <- function(id, admin = FALSE){
   out <- tagList(
     div(
       id = ns(div_id),
+      uiOutput(ns("admin_filters")),
       fluidRow(
         shinydashboard::box(
           title = "Overall Content Usage",
@@ -151,19 +152,72 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     
   })
   
+  
+  output$admin_filters <- renderUI({
+    if (!admin) return(NULL)
+    
+    content_owners <- r$content$owner_username
+    names(content_owners) <- paste(r$content$owner_first_name, r$content$owner_last_name) 
+    content_owners <- unique(content_owners)
+    
+    content <- r$content$guid
+    names(content) <- r$content$title
+    
+    out <- tagList(
+      div(
+        selectizeInput(
+          inputId = ns("filter_owner"),
+          label = "Exclude Content Owners",
+          choices = c("Select Content Owners to Exclude" = "", content_owners),
+          selected = "",
+          multiple = TRUE,
+          width = "47%"
+        ),
+        selectizeInput(
+          inputId = ns("filter_content"),
+          label = "Exclude Content",
+          choices = c("Select Content Owners to Exclude" = "", content),
+          selected = "",
+          multiple = TRUE,
+          width = "47%"
+        ),
+        style = "width:100%;margin: 0 auto;"
+      )
+    )
+    
+    return(out)
+  })
+  
+  outputOptions(output, "admin_filters", suspendWhenHidden = FALSE, priority = 10)
+  
   # usage data is initially queried in the mod_04_content.R module
   overall_usage <- reactive({
     if (admin){
       req(r$shiny_usage_all, r$static_usage_all, r$username, r$admin)
       shiny_usage <- r$shiny_usage_all
       static_usage <- r$static_usage_all
+      
+      if (!is.null(input$filter_owner)){
+        owner_guids <- r$content$guid[r$content$owner_username == input$filter_owner]
+        shiny_usage <- dplyr::filter(shiny_usage, !content_guid %in% owner_guids)
+        static_usage <- dplyr::filter(static_usage, !content_guid %in% owner_guids)
+      }
+      
+      if (!is.null(input$filter_content)){
+        shiny_usage <- dplyr::filter(shiny_usage, !content_guid %in% input$filter_content)
+        static_usage <- dplyr::filter(static_usage, !content_guid %in% input$filter_content)
+      }
     } else {
       req(r$shiny_usage, r$static_usage, r$username)
       shiny_usage <- r$shiny_usage
       static_usage <- r$static_usage
     }
     
-    overall_usage_tbl(shiny_usage, static_usage, from = r$from, to = r$to)
+    out <- overall_usage_tbl(shiny_usage, static_usage, from = r$from, to = r$to)
+    
+    
+    
+    return(out)
   })
   
   # usage_shared <- crosstalk::SharedData$new(overall_usage)
@@ -203,7 +257,19 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     # shiny_usage <- dplyr::filter(shiny_usage, started >= user_date_range()$from, started <= user_date_range()$to)
 
 
-    usage_info_join(shiny_usage, content, r$all_users)
+    out <- usage_info_join(shiny_usage, content, r$all_users)
+    
+    if (admin){
+      if (!is.null(input$filter_owner)){
+        out <- dplyr::filter(out, !owner_username %in% input$filter_owner)
+      }
+      
+      if (!is.null(input$filter_content)){
+        out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+      }
+    }
+    
+    return(out)
   })
 
   usage_static <- reactive({
@@ -219,7 +285,19 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
 
     # static_usage <- dplyr::filter(static_usage, time >= user_date_range()$from, time <= user_date_range()$to)
     
-    usage_info_join(static_usage, content, r$all_users)
+    out <- usage_info_join(static_usage, content, r$all_users)
+    
+    if (admin){
+      if (!is.null(input$filter_owner)){
+        out <- dplyr::filter(out, !owner_username %in% input$filter_owner)
+      }
+      
+      if (!is.null(input$filter_content)){
+        out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+      }
+    }
+    
+    return(out)
   })
 
   output$shiny_usage_by_date <- plotly::renderPlotly({
