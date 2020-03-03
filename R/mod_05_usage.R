@@ -154,55 +154,91 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   
   
   output$admin_filters <- renderUI({
-    if (!admin) return(NULL)
-    
-    content_owners <- r$content$owner_username
-    names(content_owners) <- paste(r$content$owner_first_name, r$content$owner_last_name) 
-    content_owners <- unique(content_owners)
-    
-    content <- r$content$guid
-    names(content) <- r$content$title
-    
-    users <- r$all_users$guid[!r$all_users$locked]
-    names(users) <- paste(r$all_users$first_name[!r$all_users$locked], r$all_users$last_name[!r$all_users$locked])
-    
-    out <- tagList(
-      fluidRow(
-        column(
-          width = 4,
-          selectizeInput(
-            inputId = ns("filter_owner"),
-            label = "Exclude Content Owners",
-            choices = c("Select Content Owners to Exclude" = "", content_owners),
-            selected = "",
-            multiple = TRUE,
-            width = "100%"
-          )
-        ),
-        column(
-          width = 4,
-          selectizeInput(
-            inputId = ns("filter_content"),
-            label = "Exclude Content",
-            choices = c("Select Content Owners to Exclude" = "", content),
-            selected = "",
-            multiple = TRUE,
-            width = "100%"
-          )
-        ),
-        column(
-          width = 4,
-          selectizeInput(
-            inputId = ns("filter_viewer"),
-            label = "Exclude Viewers",
-            choices = c("Select Content Owners to Exclude" = "", users),
-            selected = "",
-            multiple = TRUE,
-            width = "100%"
+    if (admin) {
+      content_owners <- r$content$owner_username
+      names(content_owners) <- paste(r$content$owner_first_name, r$content$owner_last_name) 
+      content_owners <- unique(content_owners)
+      
+      content <- r$content$guid
+      names(content) <- r$content$title
+      
+      users <- r$all_users$guid[!r$all_users$locked]
+      names(users) <- paste(r$all_users$first_name[!r$all_users$locked], r$all_users$last_name[!r$all_users$locked])
+      
+      out <- tagList(
+        fluidRow(
+          column(
+            width = 4,
+            selectizeInput(
+              inputId = ns("filter_owner"),
+              label = "Exclude Content Owners",
+              choices = c("Select Content Owners to Exclude" = "", content_owners),
+              selected = "",
+              multiple = TRUE,
+              width = "100%"
+            )
+          ),
+          column(
+            width = 4,
+            selectizeInput(
+              inputId = ns("filter_content"),
+              label = "Exclude Content",
+              choices = c("Select Content Owners to Exclude" = "", content),
+              selected = "",
+              multiple = TRUE,
+              width = "100%"
+            )
+          ),
+          column(
+            width = 4,
+            selectizeInput(
+              inputId = ns("filter_viewer"),
+              label = "Exclude Viewers",
+              choices = c("Select Content Owners to Exclude" = "", users),
+              selected = "",
+              multiple = TRUE,
+              width = "100%"
+            )
           )
         )
       )
-    )
+    } else {
+      
+      content <- r$user_content$guid
+      names(content) <- r$user_content$title
+      
+      users <- r$all_users$guid[!r$all_users$locked]
+      names(users) <- paste(r$all_users$first_name[!r$all_users$locked], r$all_users$last_name[!r$all_users$locked])
+      
+      out <- tagList(
+        fluidRow(
+          column(
+            width = 6,
+            selectizeInput(
+              inputId = ns("filter_content"),
+              label = "Exclude Content",
+              choices = c("Select Content Owners to Exclude" = "", content),
+              selected = "",
+              multiple = TRUE,
+              width = "100%"
+            )
+          ),
+          column(
+            width = 6,
+            selectizeInput(
+              inputId = ns("filter_viewer"),
+              label = "Exclude Viewers",
+              choices = c("Select Content Owners to Exclude" = "", users),
+              selected = "",
+              multiple = TRUE,
+              width = "100%"
+            )
+          )
+        )
+      )
+    }
+    
+    
     
     return(out)
   })
@@ -241,6 +277,20 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       req(r$shiny_usage, r$static_usage, r$username)
       shiny_usage <- r$shiny_usage
       static_usage <- r$static_usage
+      
+      if (!is.null(input$filter_content)){
+        if (input$filter_content != ""){
+          shiny_usage <- dplyr::filter(shiny_usage, !content_guid %in% input$filter_content)
+          static_usage <- dplyr::filter(static_usage, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          shiny_usage <- dplyr::filter(shiny_usage, !user_guid %in% input$filter_viewer)
+          static_usage <- dplyr::filter(static_usage, !user_guid %in% input$filter_viewer)
+        }
+      }
     }
     
     out <- overall_usage_tbl(shiny_usage, static_usage, from = r$from, to = r$to)
@@ -307,6 +357,18 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
           out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
         }
       }
+    } else {
+      if (!is.null(input$filter_content)){
+        if (input$filter_content != ""){
+          out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
+        }
+      }
     }
     
     return(out)
@@ -334,6 +396,18 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
         }
       }
       
+      if (!is.null(input$filter_content)){
+        if (input$filter_content != ""){
+          out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
+        }
+      }
+    } else {
       if (!is.null(input$filter_content)){
         if (input$filter_content != ""){
           out <- dplyr::filter(out, !content_guid %in% input$filter_content)
