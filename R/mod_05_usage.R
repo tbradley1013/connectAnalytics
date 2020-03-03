@@ -39,7 +39,7 @@ mod_05_usage_ui <- function(id, admin = FALSE){
   out <- tagList(
     div(
       id = ns(div_id),
-      uiOutput(ns("admin_filters")),
+      uiOutput(ns("admin_filters"), inline = TRUE),
       fluidRow(
         shinydashboard::box(
           title = "Overall Content Usage",
@@ -163,25 +163,44 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     content <- r$content$guid
     names(content) <- r$content$title
     
+    users <- r$all_users$guid[!r$all_users$locked]
+    names(users) <- paste(r$all_users$first_name[!r$all_users$locked], r$all_users$last_name[!r$all_users$locked])
+    
     out <- tagList(
-      div(
-        selectizeInput(
-          inputId = ns("filter_owner"),
-          label = "Exclude Content Owners",
-          choices = c("Select Content Owners to Exclude" = "", content_owners),
-          selected = "",
-          multiple = TRUE,
-          width = "47%"
+      fluidRow(
+        column(
+          width = 4,
+          selectizeInput(
+            inputId = ns("filter_owner"),
+            label = "Exclude Content Owners",
+            choices = c("Select Content Owners to Exclude" = "", content_owners),
+            selected = "",
+            multiple = TRUE,
+            width = "100%"
+          )
         ),
-        selectizeInput(
-          inputId = ns("filter_content"),
-          label = "Exclude Content",
-          choices = c("Select Content Owners to Exclude" = "", content),
-          selected = "",
-          multiple = TRUE,
-          width = "47%"
+        column(
+          width = 4,
+          selectizeInput(
+            inputId = ns("filter_content"),
+            label = "Exclude Content",
+            choices = c("Select Content Owners to Exclude" = "", content),
+            selected = "",
+            multiple = TRUE,
+            width = "100%"
+          )
         ),
-        style = "width:100%;margin: 0 auto;"
+        column(
+          width = 4,
+          selectizeInput(
+            inputId = ns("filter_viewer"),
+            label = "Exclude Viewers",
+            choices = c("Select Content Owners to Exclude" = "", users),
+            selected = "",
+            multiple = TRUE,
+            width = "100%"
+          )
+        )
       )
     )
     
@@ -198,14 +217,25 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       static_usage <- r$static_usage_all
       
       if (!is.null(input$filter_owner)){
-        owner_guids <- r$content$guid[r$content$owner_username == input$filter_owner]
-        shiny_usage <- dplyr::filter(shiny_usage, !content_guid %in% owner_guids)
-        static_usage <- dplyr::filter(static_usage, !content_guid %in% owner_guids)
+        if (input$filter_owner != ''){
+          owner_guids <- r$content$guid[r$content$owner_username == input$filter_owner]
+          shiny_usage <- dplyr::filter(shiny_usage, !content_guid %in% owner_guids)
+          static_usage <- dplyr::filter(static_usage, !content_guid %in% owner_guids)
+        }
       }
       
       if (!is.null(input$filter_content)){
-        shiny_usage <- dplyr::filter(shiny_usage, !content_guid %in% input$filter_content)
-        static_usage <- dplyr::filter(static_usage, !content_guid %in% input$filter_content)
+        if (input$filter_content != ""){
+          shiny_usage <- dplyr::filter(shiny_usage, !content_guid %in% input$filter_content)
+          static_usage <- dplyr::filter(static_usage, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          shiny_usage <- dplyr::filter(shiny_usage, !user_guid %in% input$filter_viewer)
+          static_usage <- dplyr::filter(static_usage, !user_guid %in% input$filter_viewer)
+        }
       }
     } else {
       req(r$shiny_usage, r$static_usage, r$username)
@@ -261,11 +291,21 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     
     if (admin){
       if (!is.null(input$filter_owner)){
-        out <- dplyr::filter(out, !owner_username %in% input$filter_owner)
+        if (input$filter_owner != ''){
+          out <- dplyr::filter(out, !owner_username %in% input$filter_owner)
+        }
       }
       
       if (!is.null(input$filter_content)){
-        out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+        if (input$filter_content != ""){
+          out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
+        }
       }
     }
     
@@ -289,11 +329,21 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     
     if (admin){
       if (!is.null(input$filter_owner)){
-        out <- dplyr::filter(out, !owner_username %in% input$filter_owner)
+        if (input$filter_owner != ''){
+          out <- dplyr::filter(out, !owner_username %in% input$filter_owner)
+        }
       }
       
       if (!is.null(input$filter_content)){
-        out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+        if (input$filter_content != ""){
+          out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
+        }
       }
     }
     
