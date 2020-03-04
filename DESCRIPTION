@@ -1,6 +1,6 @@
 Package: connectAnalytics
 Title: Rstudio Connect Analytics
-Version: 0.0.1
+Version: 0.0.1.9001
 Authors@R: person('Tyler', 'Bradley', email = 'tyler.bradley@phila.gov', role = c('cre', 'aut'))
 Description: This package contains a shiny app that is a analytics dashboard for a specified
     RStudio Connect server. 
