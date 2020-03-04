@@ -571,6 +571,43 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       )
   })
   
+  
+  full_usage_dat <- reactive({
+    req(usage_shiny(), usage_static())
+    
+    out <- usage_shiny() %>% 
+      dplyr::mutate(content_type = "Shiny App") %>% 
+      dplyr::select(content_type, title, owner_username, username, first_name, last_name, started, ended) %>% 
+      dplyr::bind_rows(
+        usage_static() %>% 
+          dplyr::mutate(content_type = "Static Content") %>% 
+          dplyr::select(content_type, title, owner_username, username, first_name, last_name, started = time) 
+      ) %>% 
+      dplyr::arrange(desc(started))
+    
+    return(out)
+  })
+  
+  output$full_usage_table <- reactable::renderReactable({
+    req(full_usage_dat())
+    
+   
+    
+    reactable::reactable(
+      full_usage_dat(), 
+      columns = list(
+        content_type = colDef("Content Type"),
+        title = colDef("Content Title"),
+        owner_username = colDef("Content Owner"),
+        username = colDef("Viewer Username"),
+        first_name = colDef("Viewer First Name"),
+        last_name = colDef("Viewer Last Name"),
+        started = colDef("Time Started", cell = function(value){format(value, "%b %d, %Y")}),
+        ended = colDef("Time Ended", cell = function(value){format(value, "%b %d, %Y")})
+      )
+    )
+  })
+  
   outputOptions(output, "app_user_count_cont", suspendWhenHidden = FALSE)
   outputOptions(output, "app_run_time", suspendWhenHidden = FALSE)
   outputOptions(output, "time_vis_fig", suspendWhenHidden = FALSE)
