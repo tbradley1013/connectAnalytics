@@ -94,6 +94,23 @@ mod_05_usage_ui <- function(id, admin = FALSE){
       ),
       fluidRow(
         shinydashboard::box(
+          title = "Content Usage Information",
+          reactable::reactableOutput(ns("full_usage_table")),
+          br(),
+          div(
+            downloadButton(
+              outputId = ns("download_usage_table"),
+              label = "Download Usage Info",
+              class = "btn-primary",
+              width = "100%"
+            ),
+            style = "width:250px;margin:0 auto;"
+          ),
+          width = 12
+        )
+      ),
+      fluidRow(
+        shinydashboard::box(
           title = "Content Timeline",
           timevis::timevisOutput(ns("time_vis_fig")),
           width = 12
@@ -596,21 +613,32 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     reactable::reactable(
       full_usage_dat(), 
       columns = list(
-        content_type = colDef("Content Type"),
-        title = colDef("Content Title"),
-        owner_username = colDef("Content Owner"),
-        username = colDef("Viewer Username"),
-        first_name = colDef("Viewer First Name"),
-        last_name = colDef("Viewer Last Name"),
-        started = colDef("Time Started", cell = function(value){format(value, "%b %d, %Y")}),
-        ended = colDef("Time Ended", cell = function(value){format(value, "%b %d, %Y")})
-      )
+        content_type = reactable::colDef("Content Type"),
+        title = reactable::colDef("Content Title"),
+        owner_username = reactable::colDef("Content Owner"),
+        username = reactable::colDef("Viewer Username"),
+        first_name = reactable::colDef("Viewer First Name"),
+        last_name = reactable::colDef("Viewer Last Name"),
+        started = reactable::colDef("Time Started", cell = function(value){format(value, "%b %d, %Y")}),
+        ended = reactable::colDef("Time Ended", cell = function(value){format(value, "%b %d, %Y")})
+      ),
+      class = "usage-table"
     )
   })
+  
+  output$download_usage_table <- downloadHandler(
+    filename = function(){
+      paste0("connect-usage-", Sys.Date(), ".csv")
+    },
+    content = function(file){
+      write.csv(full_usage_dat(), file, row.names = FALSE)
+    }
+  )
   
   outputOptions(output, "app_user_count_cont", suspendWhenHidden = FALSE)
   outputOptions(output, "app_run_time", suspendWhenHidden = FALSE)
   outputOptions(output, "time_vis_fig", suspendWhenHidden = FALSE)
+  outputOptions(output, "full_usage_table", suspendWhenHidden = FALSE)
   
   
 }
