@@ -32,7 +32,7 @@ mod_04_content_server <- function(input, output, session, r){
   observe({
     req(r$client, r$username)
     
-    r$content <- connectapi::get_content(r$client, limit = Inf)
+    r$content <- connectapi::get_content(r$client, limit = Inf, page_size = 1e4)
     
     r$user_content <- r$content %>% 
       dplyr::filter(owner_username == r$username)
