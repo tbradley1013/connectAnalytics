@@ -181,6 +181,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       
       users <- r$all_users$guid[!r$all_users$locked]
       names(users) <- paste(r$all_users$first_name[!r$all_users$locked], r$all_users$last_name[!r$all_users$locked])
+      users <- c(users, "Anonymous" = "Anonymous")
       
       out <- tagList(
         fluidRow(
@@ -226,6 +227,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       
       users <- r$all_users$guid[!r$all_users$locked]
       names(users) <- paste(r$all_users$first_name[!r$all_users$locked], r$all_users$last_name[!r$all_users$locked])
+      users <- c(users, "Anonymous" = "Anonymous")
       
       out <- tagList(
         fluidRow(
@@ -286,6 +288,12 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       
       if (!is.null(input$filter_viewer)){
         if (input$filter_viewer != ""){
+          
+          if ("Anonymous" %in% input$filter_viewer){
+            shiny_usage <- dplyr::filter(shiny_usage, !is.na(user_guid))
+            static_usage <- dplyr::filter(static_usage, !is.na(user_guid))
+          }
+          
           shiny_usage <- dplyr::filter(shiny_usage, !user_guid %in% input$filter_viewer)
           static_usage <- dplyr::filter(static_usage, !user_guid %in% input$filter_viewer)
         }
@@ -304,6 +312,11 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       
       if (!is.null(input$filter_viewer)){
         if (input$filter_viewer != ""){
+          if ("Anonymous" %in% input$filter_viewer){
+            shiny_usage <- dplyr::filter(shiny_usage, !is.na(user_guid))
+            static_usage <- dplyr::filter(static_usage, !is.na(user_guid))
+          }
+          
           shiny_usage <- dplyr::filter(shiny_usage, !user_guid %in% input$filter_viewer)
           static_usage <- dplyr::filter(static_usage, !user_guid %in% input$filter_viewer)
         }
@@ -371,6 +384,9 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       
       if (!is.null(input$filter_viewer)){
         if (input$filter_viewer != ""){
+          if ("Anonymous" %in% input$filter_viewer){
+            out <- dplyr::filter(out, !is.na(user_guid))
+          }
           out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
         }
       }
@@ -383,6 +399,9 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       
       if (!is.null(input$filter_viewer)){
         if (input$filter_viewer != ""){
+          if ("Anonymous" %in% input$filter_viewer){
+            out <- dplyr::filter(out, !is.na(user_guid))
+          }
           out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
         }
       }
@@ -421,6 +440,9 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       
       if (!is.null(input$filter_viewer)){
         if (input$filter_viewer != ""){
+          if ("Anonymous" %in% input$filter_viewer){
+            out <- dplyr::filter(out, !is.na(user_guid))
+          }
           out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
         }
       }
@@ -433,6 +455,9 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       
       if (!is.null(input$filter_viewer)){
         if (input$filter_viewer != ""){
+          if ("Anonymous" %in% input$filter_viewer){
+            out <- dplyr::filter(out, !is.na(user_guid))
+          }
           out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
         }
       }
