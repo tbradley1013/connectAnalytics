@@ -39,6 +39,7 @@ mod_05_usage_ui <- function(id, admin = FALSE){
   out <- tagList(
     div(
       id = ns(div_id),
+      uiOutput(ns("admin_filters"), inline = TRUE),
       fluidRow(
         shinydashboard::box(
           title = "Overall Content Usage",
@@ -89,6 +90,23 @@ mod_05_usage_ui <- function(id, admin = FALSE){
         shinydashboard::box(
           title = "App Runtimes",
           plotly::plotlyOutput(ns("app_run_time"))
+        )
+      ),
+      fluidRow(
+        shinydashboard::box(
+          title = "Content Usage Information",
+          reactable::reactableOutput(ns("full_usage_table")),
+          br(),
+          div(
+            downloadButton(
+              outputId = ns("download_usage_table"),
+              label = "Download Usage Info",
+              class = "btn-primary",
+              width = "100%"
+            ),
+            style = "width:250px;margin:0 auto;"
+          ),
+          width = 12
         )
       ),
       fluidRow(
@@ -151,19 +169,165 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     
   })
   
+  
+  output$admin_filters <- renderUI({
+    if (admin) {
+      content_owners <- r$content$owner_username
+      names(content_owners) <- paste(r$content$owner_first_name, r$content$owner_last_name) 
+      content_owners <- unique(content_owners)
+      
+      content <- r$content$guid
+      names(content) <- r$content$title
+      
+      users <- r$all_users$guid[!r$all_users$locked]
+      names(users) <- paste(r$all_users$first_name[!r$all_users$locked], r$all_users$last_name[!r$all_users$locked])
+      users <- c(users, "Anonymous" = "Anonymous")
+      
+      out <- tagList(
+        fluidRow(
+          column(
+            width = 4,
+            selectizeInput(
+              inputId = ns("filter_owner"),
+              label = "Exclude Content Owners",
+              choices = c("Select Content Owners to Exclude" = "", content_owners),
+              selected = "",
+              multiple = TRUE,
+              width = "100%"
+            )
+          ),
+          column(
+            width = 4,
+            selectizeInput(
+              inputId = ns("filter_content"),
+              label = "Exclude Content",
+              choices = c("Select Content Owners to Exclude" = "", content),
+              selected = "",
+              multiple = TRUE,
+              width = "100%"
+            )
+          ),
+          column(
+            width = 4,
+            selectizeInput(
+              inputId = ns("filter_viewer"),
+              label = "Exclude Viewers",
+              choices = c("Select Content Owners to Exclude" = "", users),
+              selected = "",
+              multiple = TRUE,
+              width = "100%"
+            )
+          )
+        )
+      )
+    } else {
+      
+      content <- r$user_content$guid
+      names(content) <- r$user_content$title
+      
+      users <- r$all_users$guid[!r$all_users$locked]
+      names(users) <- paste(r$all_users$first_name[!r$all_users$locked], r$all_users$last_name[!r$all_users$locked])
+      users <- c(users, "Anonymous" = "Anonymous")
+      
+      out <- tagList(
+        fluidRow(
+          column(
+            width = 6,
+            selectizeInput(
+              inputId = ns("filter_content"),
+              label = "Exclude Content",
+              choices = c("Select Content Owners to Exclude" = "", content),
+              selected = "",
+              multiple = TRUE,
+              width = "100%"
+            )
+          ),
+          column(
+            width = 6,
+            selectizeInput(
+              inputId = ns("filter_viewer"),
+              label = "Exclude Viewers",
+              choices = c("Select Content Owners to Exclude" = "", users),
+              selected = "",
+              multiple = TRUE,
+              width = "100%"
+            )
+          )
+        )
+      )
+    }
+    
+    
+    
+    return(out)
+  })
+  
+  outputOptions(output, "admin_filters", suspendWhenHidden = FALSE, priority = 10)
+  
   # usage data is initially queried in the mod_04_content.R module
   overall_usage <- reactive({
     if (admin){
       req(r$shiny_usage_all, r$static_usage_all, r$username, r$admin)
       shiny_usage <- r$shiny_usage_all
       static_usage <- r$static_usage_all
+      
+      if (!is.null(input$filter_owner)){
+        if (input$filter_owner != ''){
+          owner_guids <- r$content$guid[r$content$owner_username == input$filter_owner]
+          shiny_usage <- dplyr::filter(shiny_usage, !content_guid %in% owner_guids)
+          static_usage <- dplyr::filter(static_usage, !content_guid %in% owner_guids)
+        }
+      }
+      
+      if (!is.null(input$filter_content)){
+        if (input$filter_content != ""){
+          shiny_usage <- dplyr::filter(shiny_usage, !content_guid %in% input$filter_content)
+          static_usage <- dplyr::filter(static_usage, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          
+          if ("Anonymous" %in% input$filter_viewer){
+            shiny_usage <- dplyr::filter(shiny_usage, !is.na(user_guid))
+            static_usage <- dplyr::filter(static_usage, !is.na(user_guid))
+          }
+          
+          shiny_usage <- dplyr::filter(shiny_usage, !user_guid %in% input$filter_viewer)
+          static_usage <- dplyr::filter(static_usage, !user_guid %in% input$filter_viewer)
+        }
+      }
     } else {
       req(r$shiny_usage, r$static_usage, r$username)
       shiny_usage <- r$shiny_usage
       static_usage <- r$static_usage
+      
+      if (!is.null(input$filter_content)){
+        if (input$filter_content != ""){
+          shiny_usage <- dplyr::filter(shiny_usage, !content_guid %in% input$filter_content)
+          static_usage <- dplyr::filter(static_usage, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          if ("Anonymous" %in% input$filter_viewer){
+            shiny_usage <- dplyr::filter(shiny_usage, !is.na(user_guid))
+            static_usage <- dplyr::filter(static_usage, !is.na(user_guid))
+          }
+          
+          shiny_usage <- dplyr::filter(shiny_usage, !user_guid %in% input$filter_viewer)
+          static_usage <- dplyr::filter(static_usage, !user_guid %in% input$filter_viewer)
+        }
+      }
     }
     
-    overall_usage_tbl(shiny_usage, static_usage, from = r$from, to = r$to)
+    out <- overall_usage_tbl(shiny_usage, static_usage, from = r$from, to = r$to)
+    
+    
+    
+    return(out)
   })
   
   # usage_shared <- crosstalk::SharedData$new(overall_usage)
@@ -203,7 +367,47 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     # shiny_usage <- dplyr::filter(shiny_usage, started >= user_date_range()$from, started <= user_date_range()$to)
 
 
-    usage_info_join(shiny_usage, content, r$all_users)
+    out <- usage_info_join(shiny_usage, content, r$all_users)
+    
+    if (admin){
+      if (!is.null(input$filter_owner)){
+        if (input$filter_owner != ''){
+          out <- dplyr::filter(out, !owner_username %in% input$filter_owner)
+        }
+      }
+      
+      if (!is.null(input$filter_content)){
+        if (input$filter_content != ""){
+          out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          if ("Anonymous" %in% input$filter_viewer){
+            out <- dplyr::filter(out, !is.na(user_guid))
+          }
+          out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
+        }
+      }
+    } else {
+      if (!is.null(input$filter_content)){
+        if (input$filter_content != ""){
+          out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          if ("Anonymous" %in% input$filter_viewer){
+            out <- dplyr::filter(out, !is.na(user_guid))
+          }
+          out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
+        }
+      }
+    }
+    
+    return(out)
   })
 
   usage_static <- reactive({
@@ -219,7 +423,47 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
 
     # static_usage <- dplyr::filter(static_usage, time >= user_date_range()$from, time <= user_date_range()$to)
     
-    usage_info_join(static_usage, content, r$all_users)
+    out <- usage_info_join(static_usage, content, r$all_users)
+    
+    if (admin){
+      if (!is.null(input$filter_owner)){
+        if (input$filter_owner != ''){
+          out <- dplyr::filter(out, !owner_username %in% input$filter_owner)
+        }
+      }
+      
+      if (!is.null(input$filter_content)){
+        if (input$filter_content != ""){
+          out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          if ("Anonymous" %in% input$filter_viewer){
+            out <- dplyr::filter(out, !is.na(user_guid))
+          }
+          out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
+        }
+      }
+    } else {
+      if (!is.null(input$filter_content)){
+        if (input$filter_content != ""){
+          out <- dplyr::filter(out, !content_guid %in% input$filter_content)
+        }
+      }
+      
+      if (!is.null(input$filter_viewer)){
+        if (input$filter_viewer != ""){
+          if ("Anonymous" %in% input$filter_viewer){
+            out <- dplyr::filter(out, !is.na(user_guid))
+          }
+          out <- dplyr::filter(out, !user_guid %in% input$filter_viewer)
+        }
+      }
+    }
+    
+    return(out)
   })
 
   output$shiny_usage_by_date <- plotly::renderPlotly({
@@ -369,9 +613,57 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
       )
   })
   
+  
+  full_usage_dat <- reactive({
+    req(usage_shiny(), usage_static())
+    
+    out <- usage_shiny() %>% 
+      dplyr::mutate(content_type = "Shiny App") %>% 
+      dplyr::select(content_type, title, owner_username, username, first_name, last_name, started, ended) %>% 
+      dplyr::bind_rows(
+        usage_static() %>% 
+          dplyr::mutate(content_type = "Static Content") %>% 
+          dplyr::select(content_type, title, owner_username, username, first_name, last_name, started = time) 
+      ) %>% 
+      dplyr::arrange(desc(started))
+    
+    return(out)
+  })
+  
+  output$full_usage_table <- reactable::renderReactable({
+    req(full_usage_dat())
+    
+   
+    
+    reactable::reactable(
+      full_usage_dat(), 
+      columns = list(
+        content_type = reactable::colDef("Content Type"),
+        title = reactable::colDef("Content Title"),
+        owner_username = reactable::colDef("Content Owner"),
+        username = reactable::colDef("Viewer Username"),
+        first_name = reactable::colDef("Viewer First Name"),
+        last_name = reactable::colDef("Viewer Last Name"),
+        started = reactable::colDef("Time Started", cell = function(value){format(value, "%b %d, %Y")}),
+        ended = reactable::colDef("Time Ended", cell = function(value){format(value, "%b %d, %Y")})
+      ),
+      class = "usage-table"
+    )
+  })
+  
+  output$download_usage_table <- downloadHandler(
+    filename = function(){
+      paste0("connect-usage-", Sys.Date(), ".csv")
+    },
+    content = function(file){
+      write.csv(full_usage_dat(), file, row.names = FALSE)
+    }
+  )
+  
   outputOptions(output, "app_user_count_cont", suspendWhenHidden = FALSE)
   outputOptions(output, "app_run_time", suspendWhenHidden = FALSE)
   outputOptions(output, "time_vis_fig", suspendWhenHidden = FALSE)
+  outputOptions(output, "full_usage_table", suspendWhenHidden = FALSE)
   
   
 }

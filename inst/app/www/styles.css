@@ -55,6 +55,17 @@
   padding: 8px 12px !important;
 }
 
+.usage-table {
+  border: 1px solid hsl(213, 33%, 93%);
+  border-radius: 4px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.usage-table .rt-th,
+.usage-table .rt-td {
+  padding: 8px 12px !important;
+}
+
 .sidebar {
   color: #FFF;
   position: fixed;
