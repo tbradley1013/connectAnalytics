@@ -118,7 +118,7 @@ overall_usage_tbl <- function(shiny_usage, static_usage, from, to){
 usage_info_join <- function(usage, content, users){
   out <- usage %>% 
     dplyr::left_join(
-      content[, c("guid", "owner_username", "title")],
+      content[, c("guid", "owner_username", "title", "name")],
       by = c("content_guid" = "guid")
     ) %>% 
     dplyr::left_join(
@@ -127,9 +127,15 @@ usage_info_join <- function(usage, content, users){
     ) %>% 
     dplyr::mutate_at(dplyr::vars(username, first_name, last_name), list(~ifelse(is.na(.), "Anonymous", .))) %>% 
     dplyr::mutate(
-      title = ifelse(is.na(title), "Removed Content", title),
+      title = dplyr::case_when(
+        !is.na(title) ~ title,
+        !is.na(name) ~ name,
+        TRUE ~ "Removed Content"
+      ),
+      # title = ifelse(is.na(title), "Removed Content", title),
       id = dplyr::row_number()
-    ) 
+    ) %>% 
+    dplyr::select(-name)
   
   return(out)
 }
