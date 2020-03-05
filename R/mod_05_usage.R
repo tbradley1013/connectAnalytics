@@ -647,7 +647,9 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
         started = reactable::colDef("Time Started", cell = function(value){format(value, "%b %d, %Y")}),
         ended = reactable::colDef("Time Ended", cell = function(value){format(value, "%b %d, %Y")})
       ),
-      class = "usage-table"
+      class = "usage-table",
+      filterable = TRUE,
+      sortable = TRUE
     )
   })
   
