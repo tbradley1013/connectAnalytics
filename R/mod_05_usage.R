@@ -644,8 +644,8 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
         username = reactable::colDef("Viewer Username"),
         first_name = reactable::colDef("Viewer First Name"),
         last_name = reactable::colDef("Viewer Last Name"),
-        started = reactable::colDef("Time Started", cell = function(value){format(value, "%b %d, %Y")}),
-        ended = reactable::colDef("Time Ended", cell = function(value){format(value, "%b %d, %Y")})
+        started = reactable::colDef("Time Started", cell = function(value){format(value, "%b %d, %Y %H:%M:%S")}),
+        ended = reactable::colDef("Time Ended", cell = function(value){format(value, "%b %d, %Y %H:%M:%S")})
       ),
       class = "usage-table",
       filterable = TRUE,
