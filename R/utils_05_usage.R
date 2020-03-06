@@ -127,12 +127,8 @@ usage_info_join <- function(usage, content, users){
     ) %>% 
     dplyr::mutate_at(dplyr::vars(username, first_name, last_name), list(~ifelse(is.na(.), "Anonymous", .))) %>% 
     dplyr::mutate(
-      title = dplyr::case_when(
-        !is.na(title) ~ title,
-        !is.na(name) ~ name,
-        TRUE ~ "Removed Content"
-      ),
-      # title = ifelse(is.na(title), "Removed Content", title),
+      title = dplyr::coalesce(title, name),
+      title = ifelse(is.na(title), "Removed Content", title),
       id = dplyr::row_number()
     ) %>% 
     dplyr::select(-name)
