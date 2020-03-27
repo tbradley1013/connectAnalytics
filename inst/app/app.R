@@ -3,7 +3,12 @@
 library(connectAnalytics)
 library(shiny)
 
-shinyApp(
-  ui = connectAnalytics:::ca_ui(), 
-  server = connectAnalytics:::ca_server
+# This is here so that RStudio recognizes this script as a shiny app! Leave 
+# commented out.
+# shinyApp()
+
+connectAnalytics(
+  title = "Connect Analytics Sandbox",
+  header_width = 400,
+  switch_user = TRUE
 )
