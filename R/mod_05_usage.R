@@ -522,7 +522,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   outputOptions(output, "static_usage_by_owner", suspendWhenHidden = FALSE)
   
   output$app_user_count_cont <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
     
     usage_shiny() %>% 
       tidyr::pivot_longer(cols = c(started, ended), names_to = "name", values_to = "datetime", values_drop_na = TRUE) %>% 
@@ -548,7 +548,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   })
   
   output$app_run_time <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
     
     app_run_time_tbl <- usage_shiny() %>% 
       dplyr::mutate(app_time = difftime(ended, started, units = "mins")) %>%
@@ -573,7 +573,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   })
   
   output$time_vis_fig <- timevis::renderTimevis({
-    req(usage_shiny(), usage_static())
+    req(usage_shiny(), usage_static(), (nrow(usage_shiny()) + nrow(usage_static())) > 0)
     
     usage_shiny() %>% 
       dplyr::mutate(content = title,
@@ -602,7 +602,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   
   
   full_usage_dat <- reactive({
-    req(usage_shiny(), usage_static())
+    req(usage_shiny(), usage_static(), (nrow(usage_shiny()) + nrow(usage_static())) > 0)
     
     out <- usage_shiny() %>% 
       dplyr::mutate(content_type = "Shiny App") %>% 
