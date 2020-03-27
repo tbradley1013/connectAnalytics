@@ -338,19 +338,6 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     # This is defined in R/golem_utils_server.R
     overall_usage_line(overall_usage(), from = r$from, to = r$to, username = r$username, admin = admin)
   })
-  
-  # user_date_range <- reactive({
-  #   df <- usage_shared$data(withSelection = TRUE) %>%
-  #     dplyr::filter(selected_ | is.na(selected_))
-  #   
-  #   if (all(is.na(df$selected_))){
-  #     out <- list(from = r$from, to = r$to)
-  #   } else {
-  #     out <- list(from = min(df$date), to = max(r$date))
-  #   }
-  #   
-  #   return(out)
-  # })
 
 
   usage_shiny <- reactive({
