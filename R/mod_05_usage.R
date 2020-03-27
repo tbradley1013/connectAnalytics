@@ -454,7 +454,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   })
 
   output$shiny_usage_by_date <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
     # browser()
     usage_by_date(usage_shiny(), time_col = "started", from = r$from, to = r$to, type = "Shiny App")
 
@@ -462,19 +462,19 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
 
 
   output$shiny_usage_by_user <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
 
     usage_by_user(usage_shiny(), type = "Shiny App")
   })
   
   output$shiny_usage_by_content <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
     
     usage_by_content(usage_shiny(), type = "Shiny App")
   })
   
   output$shiny_usage_by_owner <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
     
     # if (!admin) return(NULL)
     usage_by_owner(usage_shiny(), type = "Shiny App")
@@ -493,25 +493,25 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   outputOptions(output, "shiny_usage_by_owner", suspendWhenHidden = FALSE)
 
   output$static_usage_by_date <- plotly::renderPlotly({
-    req(usage_static())
+    req(usage_static(), nrow(usage_static()) > 0)
 
     usage_by_date(usage_static(), time_col = "time", from = r$from, to = r$to, type = "Static Content")
   })
 
   output$static_usage_by_user <- plotly::renderPlotly({
-    req(usage_static())
+    req(usage_static(), nrow(usage_static()) > 0)
 
     usage_by_user(usage_static(), type = "Static Content")
   })
   
   output$static_usage_by_content <- plotly::renderPlotly({
-    req(usage_static())
+    req(usage_static(), nrow(usage_static()) > 0)
     
     usage_by_content(usage_static(), type = "Static Content")
   })
   
   output$static_usage_by_owner <- plotly::renderPlotly({
-    req(usage_static())
+    req(usage_static(), nrow(usage_static()) > 0)
     
     usage_by_owner(usage_static(), type = "Static Content")
   })
