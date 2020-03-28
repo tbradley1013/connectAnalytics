@@ -99,6 +99,12 @@ simply need to create an `app.R` file that looks like:
 
 ``` r
 library(connectAnalytics)
+library(shiny)
+
+# Leave a commented out line of `shinyApp()` so that RStudio recognizes the script
+# as a shiny application!
+# shinyApp()
+
 connectAnalytics()
 ```
 
