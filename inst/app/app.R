@@ -7,8 +7,11 @@ library(shiny)
 # commented out.
 # shinyApp()
 
+user <- Sys.getenv("CONNECT_ANALYTICS_USER")
+user <- ifelse(user == "", NULL, user)
+
 connectAnalytics(
   title = "Connect Analytics Sandbox",
   header_width = 400,
-  switch_user = TRUE
+  user = user
 )
