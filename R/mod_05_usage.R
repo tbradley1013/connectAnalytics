@@ -338,19 +338,6 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
     # This is defined in R/golem_utils_server.R
     overall_usage_line(overall_usage(), from = r$from, to = r$to, username = r$username, admin = admin)
   })
-  
-  # user_date_range <- reactive({
-  #   df <- usage_shared$data(withSelection = TRUE) %>%
-  #     dplyr::filter(selected_ | is.na(selected_))
-  #   
-  #   if (all(is.na(df$selected_))){
-  #     out <- list(from = r$from, to = r$to)
-  #   } else {
-  #     out <- list(from = min(df$date), to = max(r$date))
-  #   }
-  #   
-  #   return(out)
-  # })
 
 
   usage_shiny <- reactive({
@@ -467,7 +454,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   })
 
   output$shiny_usage_by_date <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
     # browser()
     usage_by_date(usage_shiny(), time_col = "started", from = r$from, to = r$to, type = "Shiny App")
 
@@ -475,19 +462,19 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
 
 
   output$shiny_usage_by_user <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
 
     usage_by_user(usage_shiny(), type = "Shiny App")
   })
   
   output$shiny_usage_by_content <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
     
     usage_by_content(usage_shiny(), type = "Shiny App")
   })
   
   output$shiny_usage_by_owner <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
     
     # if (!admin) return(NULL)
     usage_by_owner(usage_shiny(), type = "Shiny App")
@@ -506,25 +493,25 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   outputOptions(output, "shiny_usage_by_owner", suspendWhenHidden = FALSE)
 
   output$static_usage_by_date <- plotly::renderPlotly({
-    req(usage_static())
+    req(usage_static(), nrow(usage_static()) > 0)
 
     usage_by_date(usage_static(), time_col = "time", from = r$from, to = r$to, type = "Static Content")
   })
 
   output$static_usage_by_user <- plotly::renderPlotly({
-    req(usage_static())
+    req(usage_static(), nrow(usage_static()) > 0)
 
     usage_by_user(usage_static(), type = "Static Content")
   })
   
   output$static_usage_by_content <- plotly::renderPlotly({
-    req(usage_static())
+    req(usage_static(), nrow(usage_static()) > 0)
     
     usage_by_content(usage_static(), type = "Static Content")
   })
   
   output$static_usage_by_owner <- plotly::renderPlotly({
-    req(usage_static())
+    req(usage_static(), nrow(usage_static()) > 0)
     
     usage_by_owner(usage_static(), type = "Static Content")
   })
@@ -535,7 +522,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   outputOptions(output, "static_usage_by_owner", suspendWhenHidden = FALSE)
   
   output$app_user_count_cont <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
     
     usage_shiny() %>% 
       tidyr::pivot_longer(cols = c(started, ended), names_to = "name", values_to = "datetime", values_drop_na = TRUE) %>% 
@@ -561,7 +548,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   })
   
   output$app_run_time <- plotly::renderPlotly({
-    req(usage_shiny())
+    req(usage_shiny(), nrow(usage_shiny()) > 0)
     
     app_run_time_tbl <- usage_shiny() %>% 
       dplyr::mutate(app_time = difftime(ended, started, units = "mins")) %>%
@@ -586,7 +573,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   })
   
   output$time_vis_fig <- timevis::renderTimevis({
-    req(usage_shiny(), usage_static())
+    req(usage_shiny(), usage_static(), (nrow(usage_shiny()) + nrow(usage_static())) > 0)
     
     usage_shiny() %>% 
       dplyr::mutate(content = title,
@@ -615,7 +602,7 @@ mod_05_usage_server <- function(input, output, session, r, admin = FALSE){
   
   
   full_usage_dat <- reactive({
-    req(usage_shiny(), usage_static())
+    req(usage_shiny(), usage_static(), (nrow(usage_shiny()) + nrow(usage_static())) > 0)
     
     out <- usage_shiny() %>% 
       dplyr::mutate(content_type = "Shiny App") %>% 

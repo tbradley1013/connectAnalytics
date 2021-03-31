@@ -1,0 +1,8 @@
+default:
+  golem_name: connectAnalytics
+  golem_version: 0.0.1.9002
+  app_prod: no
+production:
+  app_prod: yes
+dev:
+  golem_wd: !expr here::here()

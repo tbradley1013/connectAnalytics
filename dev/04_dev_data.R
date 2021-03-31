@@ -31,5 +31,5 @@ if (file.exists("dev/data/dev_users.rds")){
   readr::write_rds(dev_users, "dev/data/dev_users.rds")
 }
 
-shiny_usage_join <- usage_info_join(dev_shiny_usage, dev_content, dev_users)
-static_usage_join <- usage_info_join(dev_static_usage, dev_content, dev_users)
+shiny_usage_join <- connectAnalytics:::usage_info_join(dev_shiny_usage, dev_content, dev_users)
+static_usage_join <- connectAnalytics:::usage_info_join(dev_static_usage, dev_content, dev_users)
